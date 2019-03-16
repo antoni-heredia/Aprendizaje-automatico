@@ -3,8 +3,17 @@
 \usepackage[utf8]{inputenc} % Escribir con acentos, ~n...
 \usepackage{eurosym} % s´ımbolo del euro
 \newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
-\usepackage{listings}             % Incluye el paquete listings
+\usepackage{listings}             % Incluye el paquete listing
+\usepackage[cache=false]{minted}
 \usepackage{graphics,graphicx, float} %para incluir imágenes y colocarlas
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks,
+	citecolor=black,
+	filecolor=black,
+	linkcolor=black,
+	urlcolor=black
+}
 
 \title{
 \normalfont \normalsize 
@@ -33,87 +42,99 @@
 
 \section{Gradiente descendente}
 \subsection{Implementar el algoritmo de gradiente descendente}
-En esta parte lo primero que realizaremos es leer de la base de datos iris para obtener tanto los datos de entrada como a la clase que pertenecen. Para ello usamos:
-\begin{lstlisting}[language=Python]
-iris = datasets.load_iris()
-\end{lstlisting}
-\subsection{Obtener las dos ultimas características y la clase}
-De entrada guardo todos los datos en el mismo array, por si en un futuro los necesito tenerlos accesibles. Luego separo cada eje que usare en la grafica y la clase a la que pertenecen.
-\begin{lstlisting}[language=Python]
-array_datos = np.column_stack((iris.data[:, 2:],iris.target))
-#inicializo variables que voy a usar
-y_axis  = array_datos[:,1]
-x_axis = array_datos[:,0]
-target =  array_datos[:,2]\end{lstlisting}
-\subsection{Visualizar los datos}
-Para visualizar los datos, he realizado un bucle, el cual va comparando a que clase pertenece ese dato, para poner la etiqueta y el color correspondiente. También los guardo de forma clasificada ya que en el siguiente apartado lo necesitare asi. 
-\begin{lstlisting}[language=Python]
-for pos in range(0,target.size):
-    if(target[pos] == 0):
-        plt.scatter(x_axis[pos], y_axis[pos], color='blue', 
-        label="Clase 0" )
-        clase_0 = np.append(clase_0, array_datos[pos:pos+1,
-        [0,1,2]],axis=0)
-    elif (target[pos] == 1):
-        plt.scatter(x_axis[pos], y_axis[pos], color='red', 
-        label="Clase 1")
-        clase_1 = np.append(clase_1, array_datos[pos:pos+1,
-        [0,1,2]],axis=0)
-    else:
-        plt.scatter(x_axis[pos], y_axis[pos], color='green', 
-        label="Clase 2")
-        clase_2 = np.append(clase_2, array_datos[pos:pos+1,
-        [0,1,2]],axis=0)\end{lstlisting}
-La grafica obtenida la podemos ver en Figura \ref{figura1}
-\begin{figure}[H]  %con el [H] le obligamos a situar aquí la figura
-\centering
-\includegraphics{images/graficaPuntos.png}  %el parámetro scale permite agrandar o achicar la imagen. En el nombre de archivo puede especificar directorios
-\caption{Grafica de puntos de los datos. (En el eje x se puede observar la penultima columna de iris y en el eje y la ultima columna)}
-\label{figura1}
- 
-\end{figure}
-\section{Parte 2}
-\subsection{Separar en training y test conservando la proporción.(80/20)}
-Para separar los datos en entrenamiento y test yo lo he realizado de la siguiente forma. Primero creo dos arrays, uno para el test y otro para el entrenamiento. Y lo que hare es sacar de forma aleatoria el 20\% de cada clase y el dato que meto en el array de test lo elimino del array en el que estaba. Asi cuando saquemos el 20\% en el array original quedara el 80\% de los datos que usaremos para el entrenamiento. Por ejemplo para la clase 0 lo realizo de la siguiente forma:
-\begin{lstlisting}[language=Python]
-tam = int(len(clase_0)*0.2)
-for pos in range(0,tam):
-    rand = random.randrange(len(clase_0))
-    test = np.append(test, clase_0[rand:rand+1,[0,1,2]],axis=0)
-    clase_0 = np.delete(clase_0,[rand],axis=0)
-\end{lstlisting}
-Se puede ver que elijo un elemento de forma aleatoria, lo añado al array de test y lo elimino de array en el que estaba. Esto lo realizo para todos los elementos de cada clase de forma independiente para preservar la proporción. Luego con los datos que nos "sobran", los añadimos al array de entrenamiento de la siguiente forma:
- \begin{lstlisting}[language=Python]
-tam = int(len(clase_0)*0.2)
-for pos in range(0,tam):
-    rand = random.randrange(len(clase_0))
-    test = np.append(test, clase_0[rand:rand+1,[0,1,2]],axis=0)
-    clase_0 = np.delete(clase_0,[rand],axis=0)
-\end{lstlisting}
-No he querido sobrecargar la salida de datos en la consola y por lo tanto no he mostrado todos los datos. Solo he mostrado la cantidad de datos de cada array. No obstante se pueden ver los datos desde Spyder, en el explorador de variables.
-\section{Parte 3}
-\subsection{Obtener 100 valores equiespaciados desde 0 a 2$\pi$}
-Para realizar este apartado usare el comando linespacae que incluye numpy.
-\begin{lstlisting}[language=Python]
-valores =np.linspace(0,2*math.pi,num=100)
-\end{lstlisting}
-\subsection{Obtener los valores para sen(x), cos(x) y sen(x)+cos(x) de los 100 valores anteriores}
-Para esto recorreremos los 100 valores que obtuvimos en el apartado anterior y evaluaremos las funciones de sen, cos y la suma  de ambas y las guardaremos en vectores diferentes.
-\begin{lstlisting}[language=Python]
-for pos in range(0,valores.size):
-    valores_sin = np.append(valores_sin, math.sin(valores[pos])) 
-    valores_cos = np.append(valores_cos, math.cos(valores[pos])) 
-    valores_mix = np.append(valores_mix, 
-    math.sin(valores[pos])+math.cos(valores[pos]))\end{lstlisting}
-\subsection{Visualizar las tres curvas simultáneamente en el mismo plot( con lineas discontinuas en negro, azul y rojo}
-Para eso uso el comando plot. Lo primero que le tenemos que pasar a plot es los valores del eje x. Despues debe ir los valores del eje y. Tambien indicaremos que queremos lineas discontinuas con ``- -'' y el color.
-Tendremos una salida como la que se ve en la Figura \ref{figura2}.
+He querido implementar el algoritmo del gradiente descendente de la forma mas general que he podido. Para ello, he creado una función que lo calcula. Esta función recibe  los siguientes parámetros:
+\begin{itemize}
+	\item lr (float): Tasa de aprendizaje
+	\item punto (array[x,y]): Punto desde el cual se quiere aplicar el algoritmo
+	\item función (float): Función a la que se le quiere aplicar el gradiente descendente
+	\item iteraciones (int): Numero máximo de iteraciones que aplicara el algoritmo
+\end{itemize}
+Esta subrutina se encarga de hacer las derivadas parciales de la función y de calcular de forma iterativa el punto mínimo de la función. En esta primera versión del algoritmo, la única condición de parada va a ser el numero de iteraciones que le pasa el usuario. Podemos ver el código del algoritmo aquí.
+\begin{minted}[mathescape,
+	frame=lines,
+	framesep=2mm]{python}
+_iter = 0 #Contador de iteraciones
+_dx = sp.diff(funcion, x) #Derivadas parciales
+_dy = sp.diff(funcion, y)
+#Lambdifyco las derivadas parciales para calcular mas rapido el valor
+_lam_dx = sp.lambdify((x,y),_dx) 
+_lam_dy = sp.lambdify((x,y),_dy)
+while True:
+	#creo una copia del punto, para que a la hora de evuluar el x, 
+	#no lo pierda para y
+	_punto_copia = np.copy(_punto)
+	#si hay mas iteraicones de las que yo quiero paro
+	if _iter > _iteraciones:
+		break
+	#calculo el gradiente
+	_punto[0] = _punto[0]-_lr*_lam_dx(_punto_copia[0],_punto_copia[1])
+	_punto[1] = _punto[1]-_lr*_lam_dy(_punto_copia[0],_punto_copia[1])
+	_iter =_iter+1
+return _punto   
+\end{minted}
+
+\subsection{Considerar la Función \(  E(u, v) = (u^2e^v - 2v^2e^{-u})^2\). Usar gradiente descendente para encontrar un mínimo de esta función, comenzando desde el punto \((u, v) = (1, 1)\) y usando una tasa de aprendizaje \(\eta = 0,01\).}
+\subsubsection{Calcular analíticamente y mostrar la expresión del gradiente de la función \(E(u, v)\)}
+Lo primero que tenemos que saber es que para calcular el gradiente, necesitamos las derivadas parciales de \(E(u,v)\). \\
+La derivada respecto de \(u\) seria: 
+
+\begin{equation}
+\frac{\partial E(u,v)}
+{\partial u} = 2\left(u^2e^v-2v^2e^{-u}\right)\left(2e^vu+2v^2e^{-u}\right)
+\end{equation}
+La derivada respecto de \(v\) seria: 
+\begin{equation}
+\frac{\partial E(u,v)}
+{\partial v} = 2\left(u^2e^v-2v^2e^{-u}\right)\left(u^2e^v-4e^{-u}v\right)
+\end{equation}
+Ahora con las derivadas, ya podemos obtener el gradiente. Los nuevos valores de \(u\) y \(v\) serán:
+\begin{equation}
+u' = u - 2\eta\left(u^2e^v-2v^2e^{-u}\right)\left(2e^vu+2v^2e^{-u}\right)
+\end{equation}
+
+\begin{equation}
+v' = v - 2\eta\left(u^2e^v-2v^2e^{-u}\right)\left(u^2e^v-4e^{-u}v\right)
+\end{equation}
+
+\subsubsection{¿Cuántas iteraciones tarda el algoritmo en obtener por primera vez un valor de \(E(u, v)\) inferior a \(10^{-14}\) . (Usar flotantes de 64 bits)}
+Para realizar este ejercicio, solo he metido una condición de parada en el algoritmo. La condición de parada en este caso es que el valor de evaluar \(E(u,v)\) en un determinada iteración sea \(E(u,v)<10^{-14}\)
+
+\begin{minted}[mathescape,
+frame=lines,
+framesep=2mm]{python} 
+if _iter > _iteraciones or 
+   _lam_f(_punto_copia[0],_punto_copia[1]) < np.float64(10**-14):
+	print ("La funcion ha acabado a las " 
+	+ str(_iter) + " iteraciones")
+	break
+\end{minted}
+En este caso el numero de iteraciones necesarias ha sido 34, como se puede ver en la Figura\ref{figura1}.
 
 \begin{figure}[H]  %con el [H] le obligamos a situar aquí la figura
 \centering
-\includegraphics{images/graficaLineas.png}  %el parámetro scale permite agrandar o achicar la imagen. En el nombre de archivo puede especificar directorios
-\caption{Grafico de lineas discontinuas.}
-\label{figura2}
- 
+\includegraphics{images/primerDescensoGradiente.png}  %el parámetro scale permite agrandar o achicar la imagen. En el nombre de archivo puede especificar directorios
+\caption{Representación de como avanza el gradiente en la función \(E(u,v)\). Punto en amarillo inicio y punto final en blanco.}
+\label{figura1}
+\end{figure}
+
+\subsubsection{¿En qué coordenadas \((u, v)\) se alcanzó por primera vez un valor igual o menor a \(10^{-14}\) en el apartado anterior.}
+Como el algoritmo del gradiente me devuelve el punto en el que acaba, lo único que tengo que hacer es mostrarlo por pantalla. En este caso el punto en el que se alcanza \(10^{-14}\) es \((0.61920768,0.96844827)\)
+
+\subsection{Considerar ahora la función \(  f(x,y)=x^2+2y^2+2\sin(2\pi x)\sin(2\pi y)\)}
+\subsubsection{Usar gradiente descendente para minimizar esta función. Usar como punto inicial \((x_{0}=0.1, y_{0}=0.1)\), (tasa de aprendizaje \(\eta=0,01\) y un máximo de 50 iteraciones. Generar un gráfico de cómo desciende el valor de la función con las iteraciones. Repetir el experimento pero usando \(\eta=0.11\), comentar las diferencias y su dependencia de \(\eta\).}
+Usando un \(\eta=0.01\), podemos gráficamente Figura  \ref{figura2} como el gradiente desciende de forma adecuada. En este caso acaba en una altura de \(-1.8200785415471563\)
+
+\begin{figure}[H]  %con el [H] le obligamos a situar aquí la figura
+	\centering
+	\includegraphics{images/segundoDescensoGradiente1.png}  
+	\caption{Gradiente de la función \(F(u,v)\) con   \((x_{0}=0.1, y_{0}=0.1)\) y \(\eta=0.01\). Punto en amarillo inicio y punto final en blanco.}
+	\label{figura2}
+\end{figure}
+En cambio cuando usamos \(\eta=0.1\) , podemos ver (Figura  \ref{figura3}) como no funciona bien. En este caso acaba en una altura de \(2.5007003656467446\), que es incluso mas alto que desde donde empezamos (\(0.7209830056250534\)).
+\begin{figure}[H]  %con el [H] le obligamos a situar aquí la figura
+	\centering
+	\includegraphics{images/segundoDescensoGradiente2.png}  
+	\caption{Gradiente de la función \(F(u,v)\) con   \((x_{0}=0.1, y_{0}=0.1)\) y \(\eta=0.1\). Punto en amarillo inicio y punto final en blanco.}
+	\label{figura3}
 \end{figure}
 \end{document}
