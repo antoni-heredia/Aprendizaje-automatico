@@ -1,5 +1,6 @@
 \documentclass[12pt,a4paper]{article}
-\usepackage[spanish]{babel} % Corta palabras en espa~nol
+\usepackage[spanish,es-tabla]{babel}
+
 \usepackage[utf8]{inputenc} % Escribir con acentos, ~n...
 \usepackage{eurosym} % s´ımbolo del euro
 \newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
@@ -14,6 +15,9 @@
 	linkcolor=black,
 	urlcolor=black
 }
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{diagbox}
 
 \title{
 \normalfont \normalsize 
@@ -38,6 +42,7 @@
 \newpage %inserta un salto de página
 \tableofcontents % para generar el índice de contenidos
 \listoffigures
+\listoftables
 \newpage
 
 \section{Gradiente descendente}
@@ -108,7 +113,7 @@ if _iter > _iteraciones or
 	+ str(_iter) + " iteraciones")
 	break
 \end{minted}
-En este caso el numero de iteraciones necesarias ha sido 34, como se puede ver en la Figura\ref{figura1}.
+En este caso el numero de iteraciones necesarias ha sido \textbf{33}, como se puede ver en la Figura\ref{figura1}.
 
 \begin{figure}[H]  %con el [H] le obligamos a situar aquí la figura
 \centering
@@ -118,7 +123,7 @@ En este caso el numero de iteraciones necesarias ha sido 34, como se puede ver e
 \end{figure}
 
 \subsubsection{¿En qué coordenadas \((u, v)\) se alcanzó por primera vez un valor igual o menor a \(10^{-14}\) en el apartado anterior.}
-Como el algoritmo del gradiente me devuelve el punto en el que acaba, lo único que tengo que hacer es mostrarlo por pantalla. En este caso el punto en el que se alcanza \(10^{-14}\) es \((0.61920768,0.96844827)\)
+Como el algoritmo del gradiente me devuelve el punto en el que acaba, lo único que tengo que hacer es mostrarlo por pantalla. En este caso el punto en el que se alcanza \(10^{-14}\) es \textbf{\((0.61920768,0.96844827)\)}.
 
 \subsection{Considerar ahora la función \(  f(x,y)=x^2+2y^2+2\sin(2\pi x)\sin(2\pi y)\)}
 \subsubsection{Usar gradiente descendente para minimizar esta función. Usar como punto inicial \((x_{0}=0.1, y_{0}=0.1)\), (tasa de aprendizaje \(\eta=0,01\) y un máximo de 50 iteraciones. Generar un gráfico de cómo desciende el valor de la función con las iteraciones. Repetir el experimento pero usando \(\eta=0.11\), comentar las diferencias y su dependencia de \(\eta\).}
@@ -137,4 +142,27 @@ En cambio cuando usamos \(\eta=0.1\) , podemos ver (Figura  \ref{figura3}) como 
 	\caption{Gradiente de la función \(F(u,v)\) con   \((x_{0}=0.1, y_{0}=0.1)\) y \(\eta=0.1\). Punto en amarillo inicio y punto final en blanco.}
 	\label{figura3}
 \end{figure}
+Las diferencias entre usar un \(\eta\) muy grande o uno adecuado es clara viendo las imágenes, con \(\eta\) adecuado se encuentra ``rápidamente'' el mínimo. Con el \(\eta\) muy grande, el algoritmo da saltos muy grandes y por lo tanto no llega a encontrar el mínimo debido a que de una iteración a otra lo excede y empieza a rebotar sin encontrar nada.
+\subsubsection{Obtener el valor mínimo y los valores de las variables \((x, y)\) en donde se alcanzan cuando el punto de inicio se fija: \((0,1, 0,1), (1, 1),(-0,5, -0,5),(-1, -1)\). Generar una tabla con los valores obtenidos}
+Los datos obtenidos podemos verlos en la Tabla \ref{tab:title}. En este caso, no he dejado el calculo de todos los puntos en el código para no sobrecargar la salida por pantalla con datos y que el tiempo de ejecución no fuera muy alto. El campo ``valor'' indica la altura que alcanza la función en el punto \((x,y)\).
+\begin{table}[H]
+
+	\caption {} \label{tab:title} 
+	   
+	\begin{tabular}{|l|r|r|r|r|}
+		\hline
+		\backslashbox{Valor final}{Punto} &  \((0.1 , 0.1)\) & \((1 , 1)\) & \((-0.5 , -0.5)\) & \((-1 , -1)\)\\
+		\hline
+		x & 0.24380497 & 1.2180703  & -0.73137746 Km & -1.2180703\\
+		\hline
+		y & -0.23792582 & 0.71281195 & -0.23785536 & -0.71281195\\
+		\hline
+		Valor mínimo & -1.82007854 & 0.59326937 & -1.33248106 & 0.59326937\\
+		\hline
+	\end{tabular}
+\end{table}
+\subsubsection{¿Cuál sería su conclusión sobre la verdadera dificultad de encontrar el mínimo	global de una función arbitraria?}
+Teniendo en cuenta los datos obtenidos en los apartados anteriores y como afecta tanto la tasa de aprendizaje como el punto donde se inicia el algoritmo. Llego a la conclusión que la verdadera dificultad radica en la elección de estos dos parámetros. Por ejemplo al elegir un ``mal'' punto de inicio puede no encontrar el punto mínimo absoluto de la función, si no un punto mínimo relativo a la posición desde donde ha iniciado. \\\\
+Elegir una tasa de aprendizaje que no sea adecuada también nos va a dar bastantes problemas. Esto se debe a que si es muy grande, el algoritmo nunca va a llegar a converger debido a que va a ir rebotando de un lado al otro del mínimo, pero sin llegar a acercarse nunca. Si lo elegimos muy pequeño, el algoritmo daría pasos muy pequeños y tardaría demasiado en llegar al mínimo.\\\\
+Por lo tanto desde mi punto de vista una vez que tienes todos los algoritmos implementados, la dificultad radica en elegir buenos valores para conseguir que nuestro algoritmo funcione de forma adecuada.
 \end{document}
