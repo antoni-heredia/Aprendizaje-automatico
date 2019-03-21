@@ -92,6 +92,10 @@ La derivada respecto de \(v\) seria:
 \frac{\partial E(u,v)}
 {\partial v} = 2\left(u^2e^v-2v^2e^{-u}\right)\left(u^2e^v-4e^{-u}v\right)
 \end{equation}
+El vector gradiente seria las dos derivadas parciales en el punto  $(u, v) = (1, 1)$.
+\begin{equation}
+\nabla E(1,1) = (E_u(1,1),E_v(1,1)) = (12.236771,2.4717385)
+\end{equation}
 Ahora con las derivadas, ya podemos obtener el gradiente. Los nuevos valores de \(u\) y \(v\) serán:
 \begin{equation}
 u' = u - 2\eta\left(u^2e^v-2v^2e^{-u}\right)\left(2e^vu+2v^2e^{-u}\right)
@@ -101,6 +105,14 @@ u' = u - 2\eta\left(u^2e^v-2v^2e^{-u}\right)\left(2e^vu+2v^2e^{-u}\right)
 v' = v - 2\eta\left(u^2e^v-2v^2e^{-u}\right)\left(u^2e^v-4e^{-u}v\right)
 \end{equation}
 
+Por lo tanto para el punto $(u, v) = (1, 1)$ el valor del gradiente seria:
+\begin{equation}
+u' = 1 - 2*0.01\left(1^2e^1-21^2e^{-1}\right)\left(2e^1+21^2e^{-1}\right) = 0.75526458
+\end{equation}
+
+\begin{equation}
+v' = 1 - 2*0.01\left(1^2e^1-21^2e^{-1}\right)\left(1^2e^1-4e^{-1}1\right) = 0.95056523
+\end{equation}
 \subsubsection{¿Cuántas iteraciones tarda el algoritmo en obtener por primera vez un valor de \(E(u, v)\) inferior a \(10^{-14}\) . (Usar flotantes de 64 bits)}
 Para realizar este ejercicio, solo he metido una condición de parada en el algoritmo. La condición de parada en este caso es que el valor de evaluar \(E(u,v)\) en un determinada iteración sea \(E(u,v)<10^{-14}\)
 
@@ -164,5 +176,5 @@ Los datos obtenidos podemos verlos en la Tabla \ref{tab:title}. En este caso, no
 \subsubsection{¿Cuál sería su conclusión sobre la verdadera dificultad de encontrar el mínimo	global de una función arbitraria?}
 Teniendo en cuenta los datos obtenidos en los apartados anteriores y como afecta tanto la tasa de aprendizaje como el punto donde se inicia el algoritmo. Llego a la conclusión que la verdadera dificultad radica en la elección de estos dos parámetros. Por ejemplo al elegir un ``mal'' punto de inicio puede no encontrar el punto mínimo absoluto de la función, si no un punto mínimo relativo a la posición desde donde ha iniciado. \\\\
 Elegir una tasa de aprendizaje que no sea adecuada también nos va a dar bastantes problemas. Esto se debe a que si es muy grande, el algoritmo nunca va a llegar a converger debido a que va a ir rebotando de un lado al otro del mínimo, pero sin llegar a acercarse nunca. Si lo elegimos muy pequeño, el algoritmo daría pasos muy pequeños y tardaría demasiado en llegar al mínimo.\\\\
-Por lo tanto desde mi punto de vista una vez que tienes todos los algoritmos implementados, la dificultad radica en elegir buenos valores para conseguir que nuestro algoritmo funcione de forma adecuada.
+Por lo tanto desde mi punto de vista una vez que tienes todos los algoritmos implementados, la dificultad radica en elegir buenos valores para conseguir que nuestro algoritmo funcione de forma adecuada.\textbf{}
 \end{document}
