@@ -14,24 +14,23 @@ import sympy as sp
 MOSTRAR_GRAFICAS = True
 
 def gradiente_descendiente(_lr, _punto, _funcion, _iteraciones, _grafias=True, minimo=None):
-    """ 
-    Esta funcion realiza el algoritmo del gradiente descendiente 
-   
-  
-    Parameters: 
+    """
+    Esta funcion realiza el algoritmo del gradiente descendiente
+
+
+    Parameters:
     lr (float): Tasa de aprendizaje
     punto (array[x,y]): Punto desde el cual se quiere aplicar el algoritmo
     funcion (float): Funcion a la que se le quiere aplicar el gradiente descendente
     iteraciones (int): Numero maximo de iteraciones que aplicara el algoritmo
-    Returns: 
+    Returns:
     array[x, y]: Punto en el que ha convergido el algoritmo
-    _grfias:Si queremos mostrar los  puntos 
+    _grfias:Si queremos mostrar los  puntos
     minimo = un float64 que indica a que minimo parar
     """
-    _converge = False #Para parar cuando converga el algoritmo
     _iter = 0 #Contador de iteraciones
-    _dx = sp.diff(funcion, x) #Derivadas parciales
-    _dy = sp.diff(funcion, y)
+    _dx = sp.diff(_funcion, x) #Derivadas parciales
+    _dy = sp.diff(_funcion, y)
     _lam_dx = sp.lambdify((x,y),_dx) #Lambdifyco las derivadas parciales para calcular mas rapido el valor
     _lam_dy = sp.lambdify((x,y),_dy)
     _lam_f = sp.lambdify((x,y),funcion)
@@ -58,7 +57,7 @@ def gradiente_descendiente(_lr, _punto, _funcion, _iteraciones, _grafias=True, m
         _iter =_iter+1
     return _punto
 
-#Las varialbes que voy a usar en mi funcion     
+#Las varialbes que voy a usar en mi funcion
 x, y = sp.symbols('x y')
 # creo la funcion
 funcion = (((x**2)*(np.e**y))-(2*(y**2)*(np.e**-x)))**2
@@ -106,7 +105,7 @@ print ("El punto en el que acaba es: "+str(punto))
 print ("La altura en la que acaba es: "+str(_lam_f(punto[0],punto[1])))
 #muestro donde a acabado el algoritmo
 if MOSTRAR_GRAFICAS:
-    
+
     """
     ax.scatter(punto[0], punto[1], funcion.evalf(subs={x:punto[0],y:punto[1]}), c='w', marker='^')
     ax.show()
@@ -196,7 +195,7 @@ print ("La altura en la que acaba es: "+str(_lam_f(punto[0],punto[1])))
 if MOSTRAR_GRAFICAS:
     plt.plot(punto[0],punto[1],".",c="white")
     plt.show()
-    
+
 input("Pulsa  Enter para continuar al siguiente apartado...")
 #la tasa de aprendizaje
 lr = 0.01
