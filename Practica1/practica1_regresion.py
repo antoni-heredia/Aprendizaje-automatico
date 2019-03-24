@@ -7,16 +7,13 @@ Created on Sun Mar 17 14:50:35 2019
 """
 import matplotlib.pyplot as plt
 import numpy as np
-
-import sympy as sp
-import pandas as pd
-from mpl_toolkits.mplot3d import axes3d, Axes3D #<-- Note the capitalization!
-from sklearn import linear_model
 from sklearn.utils import shuffle
 
+#funcion para calcular la pseudoinversa
 def calcular_pseudoInversa(_matrix):
     return np.linalg.inv(_matrix.T @ _matrix)  @ _matrix .T
 
+#funcion para cambiar el intervalo en el que se encuentra un target
 def cambiar_intervalo_target(_target, _inicio, _final):
     _target = _target.astype(np.float64)
     _valores = np.unique(_target)
@@ -26,6 +23,7 @@ def cambiar_intervalo_target(_target, _inicio, _final):
         _target[_target == _valores[ix]] = xf
     return _target
 
+#funcion para calcular el error
 def error(_X, _y, w):
     _wt = w.T
     _Xt = _X.T
@@ -87,27 +85,31 @@ def experimento(iteracioens):
 	_suma_error_out = 0
 	_RUIDO = 0.1
 	_N = 1000
-	for x in range(0, iteracioens):
-		_X = simula_unif(_N,2,-1)
-		f = lambda x,y: np.sign((x-0.2)*(x-0.2) - y*y - 0.6)
-		_y_puntos = np.empty(_N)
+	#realizo el gradiente tantas veces como me digan
+	f = lambda x,y: np.sign((x-0.2)*(x-0.2) - y*y - 0.6)
 
+	for x in range(0, iteracioens):
+		#genero los puntos
+		_X = simula_unif(_N,2,-1)
+		_y_puntos = np.empty(_N)
+		#le añado ruido a los puntos
 		for _ix,_xf in enumerate(_X):
 			_y_puntos[_ix] = f(_xf[0],_xf[1])
 			if _ix % int(100*_RUIDO) == 0:
 				_y_puntos[_ix] = -_y_puntos[_ix]
-
+		#añado variable independiente
 		_X = np.insert(_X,0,1,axis=1)
-
+		#genero el gradiente y sumo el error a la variable para luego obtener la media
 		_W, error_in = gradiente_estocastico(_X, _y_puntos,_iteraciones=50, _minibatch_size=64)
 		_suma_error += error_in
 
+		#creuo un conjunto de datos como test
 		_X_tes = simula_unif(_N,2,-1)
 		_y_tes = np.empty(1000)
 		for ix, xf in enumerate(_X_tes):
 			_y_tes[ix] = f(xf[0],xf[1])
-
 		_X_tes = np.insert(_X_tes,0,1,axis=1)
+		#obtengo el error que tiene el test desde el modelo
 		_suma_error_out += error(_X_tes,_y_tes,_W)
 
 	return _suma_error/_N, _suma_error_out/_N
@@ -136,8 +138,8 @@ X_test = np.insert(X_test,0,1,axis=1)
 wi =  calcular_pseudoInversa(X_train) @ y_train
 
 #calculo la wi con el descenso del gradiente estocastico
-
 w_sgd, error_sgd = gradiente_estocastico(X_train,y_train,64)
+
 print("----------------------Ejercicio 1----------------------")
 print("------Errores Pseudoinversa-------")
 print("El E_in es:" + str(error(X_train,y_train,wi)))
@@ -163,21 +165,26 @@ plt.plot(t,-w_sgd[0]/w_sgd[2] - w_sgd[1]/w_sgd[2]*t, label="SGD")
 
 plt.legend(numpoints=1)
 plt.show()
-#input("Pulsa  Enter para continuar al siguiente apartado...")
+
+input("Pulsa  Enter para continuar al siguiente apartado...")
 print("----------------------Ejercicio 2----------------------")
+#variables globales para la configuracion
 N=1000
 ruido = 0.1
-
+#creo los puntos, la funcion y el array del target
 X_puntos = simula_unif(N,2,-1)
 f = lambda x,y: np.sign((x-0.2)*(x-0.2) - y*y - 0.6)
 y_puntos = np.empty(1000)
 
+#relleno el array del target
 for ix, xf in enumerate(X_puntos):
 	y_puntos[ix] = f(xf[0],xf[1])
 	if ix % int(100*ruido) == 0:
 		y_puntos[ix] = -y_puntos[ix]
 
+#meto la variable independiente
 X_puntos = np.insert(X_puntos,0,1,axis=1)
+
 print("----------------------Muestro los puntos conseguido----------------------")
 plt.figure(2)
 plt.title('Ejercicio 2')
@@ -189,12 +196,14 @@ plt.plot(X_puntos[(y_puntos== -1),1],X_puntos[(y_puntos== -1),2], 'ro', c='red',
 plt.legend(numpoints=1)
 plt.show()
 
+#genero el gradiente para esa entrada
 w_ej2, error_eje2 = gradiente_estocastico(X_puntos, y_puntos,_iteraciones=50, _minibatch_size=64)
+#muestro los datos que se piden
 print("-----------Apartado C-----------")
 print("El vector de pesos w es: "+str(w_ej2))
 print("El err_in del modelo es: "+str(error_eje2))
-N=1000
 
+#realizo el experimento y muestro lo obtenido
 media_in, medio_out = experimento(N)
 print("El valor medio para el Ein en las"+str(N)+" iteraciones es de: "+str(media_in))
 print("El valor medio para el Eout en las"+str(N)+" iteraciones es de: "+str(medio_out))

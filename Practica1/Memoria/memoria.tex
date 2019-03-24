@@ -256,12 +256,13 @@ Una vez etiquetados los puntos y añadido el ruido obtenemos la Figura \ref{pic:
 La configuración que he usado para realizar el SGD ha sido la siguiente:
 \begin{itemize}
 	\item $\eta=0.01$.
-	\item Tamaño del minibatch: 16.
-	\item Nº de iteraciones: 150. 
+	\item Tamaño del minibatch: 64.
+	\item Nº de iteraciones: 50. 
 \end{itemize}
 He elegido esta configuración con tan pocas iteraciones ya que en el siguiente apartado deberemos ejecutarla 1000 veces. Entonces para que se obtengan datos adecuados y en un tiempo razonable, he elegido esta configuración.\\
-El $E_{in}$ que he obtenido es de $0.6680103340441726$ y el vector de pesos es el siguiente: $w = [-0.57499258, -0.30563394, -0.01233472]$
+El $E_{in}$ que he obtenido es de $0.646143552551042$ y el vector de pesos es el siguiente: $w = [-0.37376351, -0.1604936, -0.00137225]$. Que realizando pruebas con mas iteraciones no difiere mucho de lo obtenido.
 \subsubsection{Ejecutar todo el experimento definido 1000 veces (generamos 1000	muestras diferentes) y calcular tanto $E_{in}$ como $E_{out}$ (generaremos 1000 datos para cada test)}
+He realizado el experimento con los mismos parámetros que en el ejercicio anterior. Y he obtenido que:\\
 El valor medio para el $E_{in}$ en las 1000 iteraciones es de $0.6493599621736924$.
 El valor medio para el $E_{out}$ en las 1000 iteraciones es de $0.5267351175425848$.
 
