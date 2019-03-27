@@ -37,9 +37,7 @@ def gradiente_estocastico(_X_train, _y_train,_minibatch_size=None, _lr=0.01, _it
 
     _gradiente = lambda x, _X, _y: (2/_N)*( _X.T @ ( _X  @ x)- _X.T@ _y)
     _error =  error(_X_train, _y_train,_w)
-    _error_min = _error
     _iter = 0
-    _w_mejor = _w
     #en el caso de que el usuario no introduzca un tamaño lo calculo yo
     if _minibatch_size == None:
         _minibatch_size = np.int(np.ceil(np.log2(len(_X_train))*5))
@@ -62,18 +60,12 @@ def gradiente_estocastico(_X_train, _y_train,_minibatch_size=None, _lr=0.01, _it
 
             #calculo el gradiente
             _w = _w - _lr * _gradiente(_w, _minibatch, _y_mini)
-
-        #calculo el error de este minibatch
-        _error = error(_X_train, _y_train,_w)
-
-        #guardo el mejor _w que he conseguido hasta ahora
-        if(_error < _error_min) :
-            _error_min = _error
-            _w_mejor = _w
         #aumento el numero de iteraciones
         _iter =_iter+1
+    #calculo el error de este batch
+    _error = error(_X_train, _y_train,_w)
     #devuelvo el mejor _w y el error conseguido con ese _w
-    return _w_mejor, _error_min
+    return _w, _error
 
 # Simula datos en un cuadrado [-size,size]x[-size,size]
 def simula_unif(N, d, size):
@@ -86,7 +78,7 @@ def experimento(iteracioens):
 	_RUIDO = 0.1
 	_N = 1000
 	#realizo el gradiente tantas veces como me digan
-	f = lambda x,y: np.sign((x-0.2)*(x-0.2) - y*y - 0.6)
+	f = lambda x,y: np.sign((x-0.2)*(x-0.2) + y*y - 0.6)
 
 	for x in range(0, iteracioens):
 		#genero los puntos
@@ -173,7 +165,7 @@ N=1000
 ruido = 0.1
 #creo los puntos, la funcion y el array del target
 X_puntos = simula_unif(N,2,-1)
-f = lambda x,y: np.sign((x-0.2)*(x-0.2) - y*y - 0.6)
+f = lambda x,y: np.sign(((x-0.2)*(x-0.2)) + y*y - 0.6)
 y_puntos = np.empty(1000)
 
 #relleno el array del target
@@ -186,18 +178,34 @@ for ix, xf in enumerate(X_puntos):
 X_puntos = np.insert(X_puntos,0,1,axis=1)
 
 print("----------------------Muestro los puntos conseguido----------------------")
+
+
 plt.figure(2)
 plt.title('Ejercicio 2')
 plt.xlabel('x')
 plt.ylabel('y')
 plt.plot(X_puntos[(y_puntos== 1),1],X_puntos[(y_puntos== 1),2], 'ro', c='blue', alpha=0.6, label="1")
 plt.plot(X_puntos[(y_puntos== -1),1],X_puntos[(y_puntos== -1),2], 'ro', c='red', alpha=0.6, label="-1")
-#plt.plot( [-1,1],[(-w_ej2[0]+w_ej2[1])/w_ej2[2],(-w_ej2[0]-w_ej2[1])/w_ej2[2]],'k-')
+plt.xlim(-1,1)
+plt.ylim(-1,1)
 plt.legend(numpoints=1)
 plt.show()
 
+
 #genero el gradiente para esa entrada
 w_ej2, error_eje2 = gradiente_estocastico(X_puntos, y_puntos,_iteraciones=50, _minibatch_size=64)
+
+plt.figure(3)
+plt.title('Modelo para el ejercicio 2s')
+plt.xlabel('x')
+plt.ylabel('y')
+plt.plot(X_puntos[(y_puntos== 1),1],X_puntos[(y_puntos== 1),2], 'ro', c='blue', alpha=0.6, label="1")
+plt.plot(X_puntos[(y_puntos== -1),1],X_puntos[(y_puntos== -1),2], 'ro', c='red', alpha=0.6, label="-1")
+plt.plot( [-1,1],[(-w_ej2[0]+w_ej2[1])/w_ej2[2],(-w_ej2[0]-w_ej2[1])/w_ej2[2]],'k-',c='yellow',label="modelo")
+plt.xlim(-1,1)
+plt.ylim(-1,1)
+plt.legend(numpoints=1)
+plt.show()
 #muestro los datos que se piden
 print("-----------Apartado C-----------")
 print("El vector de pesos w es: "+str(w_ej2))

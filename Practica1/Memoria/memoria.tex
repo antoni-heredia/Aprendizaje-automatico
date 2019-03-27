@@ -96,7 +96,7 @@ El vector gradiente seria las dos derivadas parciales en el punto  $(u, v) = (1,
 \begin{equation}
 \nabla E(1,1) = (E_u(1,1),E_v(1,1)) = (12.236771,2.4717385)
 \end{equation}
-Ahora con las derivadas, ya podemos obtener el gradiente. Los nuevos valores de \(u\) y \(v\) serán:
+Ahora con las derivadas, ya podemos obtener el punto a donde tiende el gradiente con ese $\eta$. Los nuevos valores de \(u\) y \(v\) serán:
 \begin{equation}
 u' = u - 2\eta\left(u^2e^v-2v^2e^{-u}\right)\left(2e^vu+2v^2e^{-u}\right)
 \end{equation}
@@ -179,7 +179,29 @@ Elegir una tasa de aprendizaje que no sea adecuada también nos va a dar bastant
 Por lo tanto desde mi punto de vista una vez que tienes todos los algoritmos implementados, la dificultad radica en elegir buenos valores para conseguir que nuestro algoritmo funcione de forma adecuada.\textbf{}
 \section{Regresión lineal}
 \subsection{Estimar un modelo de regresión lineal a partir de los datos proporcionados usando tanto el algoritmo de la pseudoinversa como  SGD}
-Para la implementación del SGD, he añadido un pequeño cambio al algoritmo original. Lo primero que he realizado es añadir una condición de parada por numero de iteraciones. Por si el epsilon que utilizo es muy pequeño y el algoritmo no consigue ``converger''. \\Otro cambio que he realizado, muy simple pero efectivo, es que en caso de que no consiga converger y pare por numero de iteraciones, lo que realizo es llevar una copia de la $w$ con menor $E_{in}$ que he obtenido y esos son los pesos y el error que devolveré. Asegurando así obtener el mejor modelo que he conseguido calcular, pero dejando la posibilidad de salir de mínimos locales.
+En mi SGD, para cada iteración, lo que realizado primero es realizar una copia desordenada de todo el array de los datos junto con sus etiquetas. Cuando están desordenados empiezo a sacar minibatch's del tamaño que se le indique, y los saca hasta que no queden datos en el array. En la siguiente empiezo el proceso de nuevo.
+\begin{minted}[mathescape,
+frame=lines,
+framesep=2mm]{python} 
+while _error >_epsilon and _iter < _iteraciones:
+	#realizo la mezcla de los datos
+	_batch, _y_batch = shuffle(_X_train, _y_train)
+
+	#cojo minibatchs hasta que se acaben
+	while _batch.shape[0] != 0:
+		#cojo un minibatch y sus etiquetas correspondientess
+		_minibatch = _batch[:_minibatch_size,:]
+		_y_mini = _y_batch[:_minibatch_size]
+		
+		#elemino ese minibatch para no coger en la siguiente iteracion
+		_batch = np.delete(_batch,np.s_[:_minibatch_size:], axis = 0)
+		_y_batch = np.delete(_y_batch,np.s_[:_minibatch_size:])
+		
+		#calculo el gradiente
+		_w = _w - _lr * _gradiente(_w, _minibatch, _y_mini)
+		#aumento el numero de iteraciones
+		_iter =_iter+1
+\end{minted}
 \subsubsection{ Pintar las soluciones obtenidas junto con los datos usados en el ajuste.}
 La configuración que he usado para realizar el SGD ha sido la siguiente:
 \begin{itemize}
@@ -260,12 +282,19 @@ La configuración que he usado para realizar el SGD ha sido la siguiente:
 	\item Nº de iteraciones: 50. 
 \end{itemize}
 He elegido esta configuración con tan pocas iteraciones ya que en el siguiente apartado deberemos ejecutarla 1000 veces. Entonces para que se obtengan datos adecuados y en un tiempo razonable, he elegido esta configuración.\\
-El $E_{in}$ que he obtenido es de $0.646143552551042$ y el vector de pesos es el siguiente: $w = [-0.37376351, -0.1604936, -0.00137225]$. Que realizando pruebas con mas iteraciones no difiere mucho de lo obtenido.
+El $E_{in}$ que he obtenido es de $0.9459233234186475$ y el vector de pesos es el siguiente: $w = [-0.00095213, -0.16145304,  0.02704213]$. Que realizando pruebas con mas iteraciones no difiere mucho de lo obtenido.El modelo generado quedaría como lo que se ve en la Figura \ref{pic:regresion}
+\begin{figure}[H]  %con el [H] le obligamos a situar aquí la figura
+	
+	\centering
+	\includegraphics[width=0.7\textheight]{images/regresion.png}  %el parámetro scale permite agrandar o achicar la imagen. En el nombre de archivo puede especificar directorios
+	\caption{Representación de los puntos etiquetados junto al modelo obtenido por SGD.}
+	\label{pic:regresion}
+\end{figure}
 \subsubsection{Ejecutar todo el experimento definido 1000 veces (generamos 1000	muestras diferentes) y calcular tanto $E_{in}$ como $E_{out}$ (generaremos 1000 datos para cada test)}
 He realizado el experimento con los mismos parámetros que en el ejercicio anterior. Y he obtenido que:\\
-El valor medio para el $E_{in}$ en las 1000 iteraciones es de $0.6493599621736924$.
-El valor medio para el $E_{out}$ en las 1000 iteraciones es de $0.5267351175425848$.
+El valor medio para el $E_{in}$ en las 1000 iteraciones es de $0.963238531019716$.
+El valor medio para el $E_{out}$ en las 1000 iteraciones es de $0.9551645546822114$.
 
 \subsubsection{Valore que tan bueno considera que es el ajuste con este modelo lineal a la vista	de los valores medios obtenidos de $E_{out}$ y $E_{in}$}
-Podemos ver que el $E_{out}$ es menor, esto se debe a que los test que he utilizado no tenían ningún ``ruido'' y por lo tanto, en media, se ajusta mejor. De una iteración a hacer la media con 1000 el $E_{in}$ no tiene un cambio tan acuciado.\\ Podemos ver que esta vez el ajuste no es tan bueno como en casos anteriores. Esto se debe a que la función que podría ajustar nuestros datos, no es lineal, como la que realizamos ahora, si no que debería usar alguna función que tuviera alguna curva.
+Podemos ver que el $E_{out}$ es menor, esto se debe a que los test que he utilizado no tenían ningún ``ruido'' y por lo tanto, en media, se ajusta mejor. De una iteración a hacer la media con 1000 el $E_{in}$ no tiene un cambio tan acuciado.\\ Podemos ver que esta vez el ajuste no es tan bueno como en casos anteriores. Esto se debe a que la función que podría ajustar nuestros datos, no es lineal, como la que realizamos ahora, si no que debería usar alguna función que tuviera curvatura.
 \end{document}
