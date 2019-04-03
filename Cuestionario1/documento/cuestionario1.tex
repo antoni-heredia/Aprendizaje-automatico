@@ -1,0 +1,78 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[spanish,es-tabla]{babel}
+
+\usepackage[utf8]{inputenc} % Escribir con acentos, ~n...
+\usepackage{eurosym} % s´ımbolo del euro
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
+\usepackage{listings}             % Incluye el paquete listing
+\usepackage[cache=false]{minted}
+\usepackage{graphics,graphicx, float} %para incluir imágenes y colocarlas
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks,
+	citecolor=black,
+	filecolor=black,
+	linkcolor=black,
+	urlcolor=black
+}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{diagbox}
+
+
+
+\begin{document}
+
+\title{Aprendizaje autom\'atico. Cuestionario 1}
+
+\author{
+  Antonio Jesús Heredia Castillo\\
+  \texttt{00000000A}
+}
+
+\date{}
+\maketitle
+\horrule{2pt}
+
+\begin{enumerate}
+	\item Identificar, para cada una de las siguientes tareas, cual es el prioblema, que tipo de	aprendizaje es el adecuado (supervisado, no supervisado, por refuerzo) y los elementos de aprendizaje (X , f, Ym ) que deberíamos usar en cada caso. Si una tarea se ajusta a más de un tipo, explicar como y describir los elementos para cada tipo.
+	\begin{enumerate}
+		\item  Clasificación automática de cartas por distrito postal.\\\\
+		\textbf{Respuesta:}\\
+		Esto es un caso típico de aprendizaje supervisado. En este caso se creara un modelo capaz de reconocer los diferentes números y así poder saber el distrito postal al que pertenece la carta. En este caso los valores de entrada serán datos de la imagen del dígito. Estos valores puede ser como hemos visto en practicas la intensidad promedio y la simetría de la misma. Por otro lado la salida seria cual es el dígito que estamos clasificando. 
+		 
+		\item Decidir si un determinado índice del mercado de valores subirá o bajará dentro de un periodo de tiempo fijado. \\\\
+		\textbf{Respuesta:}\\
+		Aunque a priori puede parecer fácilmente abordable por aprendizaje supervisado, creo que seria mas conveniente abordarlo por aprendizaje reforzado. Ya que en la bolsa influye demasiadas variables y seria difícil tenerlas todas en cuenta por nosotros. En cambio para un modelo de aprendizaje por refuerzo seria mas fácil encontrar los patrones que se dan cuando recibe un ``refuerzo'' positivo o negativo(que suba o baje el valor) .
+		\item Hacer que un dron sea capaz de rodear un obstáculo\\\\		\textbf{Respuesta:}\\
+		En este caso usaría aprendizaje por refuerzo. Usaría un simulador de drones en una computadora, para que el dron real no tuviera daños. La ``recompensa'' recibida seria superar el obstáculo. De esta forma no necesitaríamos ningún conjunto de datos anterior para poder realizar el entrenamiento del dron.
+		
+		\item Dada una colección de fotos de perros, posiblemente de distintas razas, establecer cuantas razas distintas hay representadas en la colección.\\\\		\textbf{Respuesta:}\\
+		Para este supuesto intentaría utilizar aprendizaje no supervisado ya que no nos importa  que raza tiene cada perro, si no la cantidad de razas. De esta forma la maquina se encargara de encontrar semejanzas entre las diferentes fotografiás y las agrupara de manera natural según el perro que aparece, evitando tener datos etiquetados.
+	\end{enumerate}
+
+
+	\item ¿Cuales de los siguientes problemas son más adecuados para una aproximación por aprendizaje y cuales más adecuados para una aproximación por diseño? Justificar la decisión
+	\begin{enumerate}
+		\item Determinar si un vertebrado es mamífero, reptil, ave, anfibio o pez.\\\\		\textbf{Respuesta:}\\
+		En este acaso usaría aproximación por diseño, ya que cada clase de vertebrados tienen características comunes que la diferencia de otras clases. Estas caracterizaras de cada clase son ya muy conocidas (por ejemplo, los mamíferos tienen glándulas mamarias) y seria fácil crear un algoritmo que lo resolviera.
+		\item Determinar si se debe aplicar una campaña de vacunación contra una enfermedad.\\\\		\textbf{Respuesta:}\\
+		Este problema intentaría abordarlo con una aproximación por diseño. Los virus pueden cambiar de un año para otro e incluso aparecer enfermedades nuevas o que no tengamos suficientes datos estadísticos como para entrenar a un modelo de aprendizaje. Por tanto usando el conocimiento de un infectologo podríamos crear un sistema algorítmico que prediga cuando seria necesario realizar  una campaña de evacuación. 
+		\item Determinar perfiles de consumidor en una cadena de supermercados.\\\\		\textbf{Respuesta:}\\
+		Aquí, al tener que hacer ``grupos'' de consumidores, podríamos usar una aproximación por aprendizaje. Este se podría encargar de buscar semejanzas entre los diferentes consumidores y agrupar los que mas se parezcan entre si.
+		\item Determinar el estado anímico de una persona a partir de una foto de su cara.\\\\		\textbf{Respuesta:}\\
+		También elegiría una aproximación por aprendizaje ya que, podemos proveer con un gran conjunto de datos etiquetados al sistema y que este se encargara de analizar las diferentes variables  que tuviera las imágenes proporcionadas y poder predecir con una imagen nueva el estado animico de la persona que aparece. 
+		\item Determinar el ciclo óptimo para las luces de los semáforos en un cruce con mucho tráfico.\\\\		\textbf{Respuesta:}\\
+		Esto seria un problema típico para resolver con aproximación por diseño. Sabemos bien como afecta las distintas variables al problema (si hay coches pasando, si  hay alguien esperando para cruzar la calle, etc), con estos datos seria fácil ajustar un algoritmo que satisfaga las necesidades de los usuarios.
+	\end{enumerate}
+	\item Construir un problema de aprendizaje desde datos para un problema de clasificación de fruta en una explotación agraria que produce mangos, papayas y guayabas. Identificar los siguientes elementos formales X , Y, D, f del problema. Dar una descripción de los mismos que pueda ser usada por un computador. ¿Considera que en este problema estamos ante un caso de etiquetas con ruido o sin ruido? Justificar las respuestas.\\\\
+		\textbf{Respuesta:}\\
+		\begin{enumerate}
+			\item \textbf{X} : las variables $\{x_1,x_2,...,x_n\}$ con las que podemos definir las distintas frutas. En este caso puede ser color, tamaño, simetría, etc. 
+			\item \textbf{Y}: Al ser un problema de clasificación discreto he elegido esta representación. $\mathcal{Y} = y \in \{mango, papaya, guayaba\}$
+			\item El conjunto de datos seria $D = \{(x_1,y_1),...,(x_N, y_N) y_i=f(x_i),i=1,2,3,...,N/x_i \in \mathcal{X},y_i \in \mathcal{Y}\} $ 
+			\item La función $f$ es desconocida y es la que intentamos buscar a partir del aprendizaje de los datos. $f : \mathcal{X} \mapsto \mathcal{Y}$
+		\end{enumerate}
+\end{enumerate}
+
+\end{document}
