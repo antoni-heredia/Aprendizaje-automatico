@@ -1,6 +1,9 @@
 \documentclass[12pt,a4paper]{article}
-\usepackage[spanish,es-tabla]{babel}
 
+\usepackage[spanish,es-tabla]{babel}
+\usepackage[a4paper,bindingoffset=0.1in,%
+left=0.75in,right=0.75in,top=1in,bottom=1in,%
+footskip=.2in]{geometry}
 \usepackage[utf8]{inputenc} % Escribir con acentos, ~n...
 \usepackage{eurosym} % s´ımbolo del euro
 \newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
@@ -18,9 +21,8 @@
 \usepackage{multirow}
 \usepackage{array}
 \usepackage{diagbox}
-
-
-
+\usepackage{amsmath}
+\usepackage{verbatim}
 \begin{document}
 
 \title{Aprendizaje autom\'atico. Cuestionario 1}
@@ -73,6 +75,160 @@
 			\item El conjunto de datos seria $D = \{(x_1,y_1),...,(x_N, y_N) y_i=f(x_i),i=1,2,3,...,N/x_i \in \mathcal{X},y_i \in \mathcal{Y}\} $ 
 			\item La función $f$ es desconocida y es la que intentamos buscar a partir del aprendizaje de los datos. $f : \mathcal{X} \mapsto \mathcal{Y}$
 		\end{enumerate}
+	\item Suponga una matriz cuadrada $A$ que admita la descomposición $A = X^TX$ para alguna matriz $X$ de números reales. Establezca una relación entre los valores singulares de las matriz $A$ y los valores singulares de $X$.\\\\\textbf{Respuesta: }\\
+	Consideraremos la SVD de $X$ como $X=UDV^T$, ademas sabemos según las diapositivas (pagina 15/Sesión 2 Modelos lineales), $X^TX = UDDV^T$. Por lo tanto como tenemos que $A=X^TX = UDDV^T$, los valores singulares de la matriz $A$ serán el cuadrado de los valores singulares de los de $X$, ya que $D$ es una matriz diagonal de $n \times n$ y la multiplicación de D por ella misma es el cuadrado de cada valor de su diagonal. Esto es una propiedad de la matrices diagonales.
+	\item Sean $x$ e $y$ dos vectores de características de dimensión $M \times 1$. La expresión $\operatorname{cov}(\mathbf{x}, \mathbf{y})=\frac{1}{M} \sum_{i=1}^{M}\left(x_{i}-\overline{x}\right)\left(y_{i}-\overline{y}\right)$ define la covarianza entre dichos vectores, donde $\overline{z}$ representa el valor medio de los elementos de $\textbf{z}$. Considere ahora una matriz $X$ cuyas columnas representan vectores de características. La matriz de covarianzas asociada a la matriz $X = (x_1 , x_2 , · · · , x_N )$ es el conjunto de covarianzas definidas por cada dos de sus vectores columnas. Es decir, $$\operatorname{cov}(\mathrm{X})=\left( \begin{array}{cccc}{\operatorname{cov}\left(\mathbf{x}_{1}, \mathbf{x}_{1}\right)} & {\operatorname{cov}\left(\mathbf{x}_{1}, \mathbf{x}_{2}\right)} & {\dots} & {\operatorname{cov}\left(\mathbf{x}_{1}, \mathbf{x}_{N}\right)} \\ {\operatorname{cov}\left(\mathbf{x}_{2}, \mathbf{x}_{1}\right)} & {\operatorname{cov}\left(\mathbf{x}_{2}, \mathbf{x}_{2}\right)} & {\cdots} & {\operatorname{cov}\left(\mathbf{x}_{2}, \mathbf{x}_{N}\right)} \\ {\cdots} & {\cdots} & {\cdots} & {\cdots} \\ {\operatorname{cov}\left(\mathbf{x}_{N}, \mathbf{x}_{1}\right)} & {\operatorname{cov}\left(\mathbf{x}_{N}, \mathbf{x}_{2}\right)} & {\cdots} & {\operatorname{cov}\left(\mathbf{x}_{N}, \mathbf{x}_{N}\right)}\end{array}\right)$$ Sea $1_{M}^{T}=(1,1, \cdots, 1)$ un vector $M \time 1$ de unos. Mostrar que representan las siguientes:
+	expresiones
+	\begin{enumerate}
+		\item  $E 1=11^{T} \mathrm{X}$\\\\
+		\textbf{Respuesta:}\\
+
+
+\begin{equation}
+\begin{split}
+\begin{aligned}
+\notag
+	E_1 &= \begin{pmatrix}1_1\\1_2\\\cdots\\1_m\end{pmatrix} \times \begin{pmatrix} 1_1&1_2&&\cdots&&1_m \end{pmatrix} \times \begin{pmatrix}	
+x_{11}&x_{21}&\cdots&x_{n1}\\ 
+x_{12}&x_{22}&\cdots&x_{n2}\\ 
+\cdots & \cdots & \cdots & \cdots \\
+x_{1m}&x_{2m}&\cdots&x_{nm}
+\end{pmatrix} \\ & = \begin{pmatrix}	
+		1_{11}&1_{21}&\cdots&1_{m1}\\ 
+		1_{12}&1_{22}&\cdots&1_{m2}\\ 
+		\cdots & \cdots & \cdots & \cdots \\
+		1_{1m}&1_{2m}&\cdots&1_{mm}
+		\end{pmatrix}\times
+		\begin{pmatrix}	
+		x_{11}&x_{21}&\cdots&x_{n1}\\ 
+		x_{12}&x_{22}&\cdots&x_{n2}\\ 
+		\cdots & \cdots & \cdots & \cdots \\
+		x_{1m}&x_{2m}&\cdots&x_{nm}
+		\end{pmatrix} \\ &  =   \begin{pmatrix}	
+		\displaystyle\sum_{i=1}^{m}x_{1 i}&\displaystyle\sum_{i=1}^{m}x_{2 i}&\cdots&\displaystyle\sum_{i=1}^{m}x_{n i}\\ 
+		\displaystyle\sum_{i=1}^{m}x_{1 i}&\displaystyle\sum_{i=1}^{m}x_{2 i}&\cdots&\displaystyle\sum_{i=1}^{m}x_{n i}\\ 
+		\cdots & \cdots & \cdots & \cdots \\
+		\displaystyle\sum_{i=1}^{m}x_{1 i}&\displaystyle\sum_{i=1}^{m}x_{2 i}&\cdots&\displaystyle\sum_{i=1}^{m}x_{n i}
+		\end{pmatrix}
+\end{aligned}
+\end{split}
+\end{equation}
+
+
+		\item  $E 2=\left(\mathrm{X}-\frac{1}{M} E 1\right)^{T}\left(\mathrm{X}-\frac{1}{M} E 1\right)$\\\\\textbf{Respuesta:}\\
+		{\scriptsize
+\begin{equation}
+\begin{split}
+\begin{aligned}
+\notag
+		\left(\frac{1}{m} E 1\right) =   \begin{pmatrix}	
+		\frac{1}{m} \displaystyle\sum_{i=1}^{m}x_{1 i}&\frac{1}{m} \displaystyle\sum_{i=1}^{m}x_{2 i}&\cdots&\frac{1}{m} \displaystyle\sum_{i=1}^{m}x_{n i}\\ 
+		\frac{1}{m} \displaystyle\sum_{i=1}^{m}x_{1 i}&\frac{1}{m} \displaystyle\sum_{i=1}^{m}x_{2 i}&\cdots&\frac{1}{m} \displaystyle\sum_{i=1}^{m}x_{n i}\\ 
+		\cdots & \cdots & \cdots & \cdots \\
+		\frac{1}{m} \displaystyle\sum_{i=1}^{m}x_{1 i}&\frac{1}{m} \displaystyle\sum_{i=1}^{m}x_{2 i}&\cdots&\frac{1}{m} \displaystyle\sum_{i=1}^{m}x_{n i}
+		\end{pmatrix} = \left( \begin{array}{cccc}{\overline{x}_{1}} & {\overline{x}_{2}} & {\cdots} & {\overline{x}_{N}} \\ {\overline{x}_{1}} & {\overline{x}_{2}} & {\cdots} & {\overline{x}_{N}} \\ {\cdots} & {\cdots} & {\ldots} & {\cdots} \\ {\overline{x}_{1}} & {\overline{x}_{2}} & {\cdots} & {\overline{x}_{N}}\end{array}\right)
+\end{aligned}
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+\begin{aligned}
+\notag
+		\left(X-\frac{1}{m} E 1\right) &= \begin{pmatrix}	
+		x_{11}&x_{21}&\cdots&x_{n1}\\ 
+		x_{12}&x_{22}&\cdots&x_{n2}\\ 
+		\cdots & \cdots & \cdots & \cdots \\
+		x_{1m}&x_{2m}&\cdots&x_{nm}
+		\end{pmatrix} - \left( \begin{array}{cccc}{\overline{x}_{1}} & {\overline{x}_{2}} & {\cdots} & {\overline{x}_{n}} \\ {\overline{x}_{1}} & {\overline{x}_{2}} & {\cdots} & {\overline{x}_{n}} \\ {\cdots} & {\cdots} & {\ldots} & {\dots} \\ {\overline{x}_{1}} & {\overline{x}_{2}} & {\cdots} & {\overline{x}_{n}}\end{array}\right) 
+		=\left( \begin{array}{cccc}{x_{11}-\overline{x}_{1}} & {x_{21}-\overline{x}_{2}} & {\cdots} & {x_{n 1}-\overline{x}_{n}} \\ {x_{12}-\overline{x}_{1}} & {x_{22}-\overline{x}_{2}} & {\cdots} & {x_{m 2}-\overline{x}_{n}} \\ {\cdots} & {\cdots} & {\cdots} & {\cdots} \\ {x_{1 m}-\overline{x}_{1}} & {x_{2 m}-\overline{x}_{2}} & {\cdots} & {x_{n m}-\overline{x}_{n}}\end{array}\right)
+\end{aligned}
+\end{split}
+\end{equation}
+\begin{equation}
+\begin{split}
+\begin{aligned}
+\notag
+		\left(X-\frac{1}{m} E 1\right)^T = \left( \begin{array}{cccc}{
+		x_{11}-\overline{x}_{1}} & {x_{12}-\overline{x}_{1}} & {\cdots} & {x_{1 m}-\overline{x}_{1}} \\ 
+		{x_{21}-\overline{x}_{2}} & {x_{22}-\overline{x}_{2}} & {\cdots} & {x_{2 m}-\overline{x}_{2}} \\ 
+		{\cdots} & {\cdots} & {\cdots} & {\cdots} \\ 
+		{x_{n 1}-\overline{x}_{n}} & {x_{n 2}-\overline{x}_{n}} & {\cdots} & {x_{n m}-\overline{x}_{n}}\end{array}\right)
+		\end{aligned}
+		\end{split}
+		\end{equation}
+		
+
+\begin{equation}
+\begin{aligned}
+\notag
+	&	E2 = \left( \begin{array}{cccc}{
+			x_{11}-\overline{x}_{1}} & {x_{12}-\overline{x}_{1}} & {\cdots} & {x_{1 m}-\overline{x}_{1}} \\ 
+		{x_{21}-\overline{x}_{2}} & {x_{22}-\overline{x}_{2}} & {\cdots} & {x_{2 m}-\overline{x}_{2}} \\ 
+		{\cdots} & {\cdots} & {\cdots} & {\cdots} \\ 
+		{x_{n 1}-\overline{x}_{n}} & {x_{n 2}-\overline{x}_{n}} & {\cdots} & {x_{n m}-\overline{x}_{n}}\end{array}\right) \left( \begin{array}{cccc}{x_{11}-\overline{x}_{1}} & {x_{21}-\overline{x}_{2}} & {\cdots} & {x_{n 1}-\overline{x}_{n}} \\ {x_{12}-\overline{x}_{1}} & {x_{22}-\overline{x}_{2}} & {\cdots} & {x_{m 2}-\overline{x}_{n}} \\ {\cdots} & {\cdots} & {\cdots} & {\cdots} \\ {x_{1 m}-\overline{x}_{1}} & {x_{2 m}-\overline{x}_{2}} & {\cdots} & {x_{n m}-\overline{x}_{n}}\end{array}\right)\\ 
+		&=m \begin{pmatrix}	
+		\frac{1}{m} \displaystyle\sum_{i=1}^{m}	(x_{1i}-\overline{x}_{1}	)(x_{1i}-\overline{x}_{1}	)&\frac{1}{m} \displaystyle\sum_{i=1}^{m}(x_{1i}-\overline{x}_{1}	)(x_{2i}-\overline{x}_{2}	)&\cdots&\frac{1}{m} \displaystyle\sum_{i=1}^{m}\left(x_{1 i}-\overline{x}_{1}\right)\left(x_{n i}-\overline{x}_{n}\right)\\ 
+		\frac{1}{m} \displaystyle\sum_{i=1}^{m}(x_{1i}-\overline{x}_{1}	)(x_{2i}-\overline{x}_{2})&\frac{1}{m} \displaystyle\sum_{i=1}^{m}(x_{2i}-\overline{x}_{2}	)(x_{2i}-\overline{x}_{2}	)&\cdots&\frac{1}{m} \displaystyle\sum_{i=1}^{m}\left(x_{2 i}-\overline{x}_{2}\right)\left(x_{n i}-\overline{x}_{m}\right)\\ 
+		\cdots & \cdots & \cdots & \cdots \\
+		\frac{1}{m} \displaystyle\sum_{i=1}^{m}\left(x_{n i}-\overline{x}_{n}\right)\left(x_{1 i}-\overline{x}_{1}\right)&\frac{1}{m} \displaystyle\sum_{i=1}^{m}\left(x_{n i}-\overline{x}_{n}\right)\left(x_{2 i}-\overline{x}_{2}\right)&\cdots&\frac{1}{m} \displaystyle\sum_{i=1}^{m}\left(x_{n i}-\overline{x}_{n}\right)\left(x_{n i}-\overline{x}_{n}\right)\end{pmatrix}\\ &=
+		m\left( \begin{array}{cccc}{\operatorname{cov}\left(\mathbf{x}_{1}, \mathbf{x}_{1}\right)} & {\operatorname{cov}\left(\mathbf{x}_{1}, \mathbf{x}_{2}\right)} & {\cdots} & {\operatorname{cov}\left(\mathbf{x}_{1}, \mathbf{x}_{n}\right)} \\ {\operatorname{cov}\left(\mathbf{x}_{2}, \mathbf{x}_{1}\right)} & {\operatorname{cov}\left(\mathbf{x}_{2}, \mathbf{x}_{2}\right)} & {\cdots} & {\operatorname{cov}\left(\mathbf{x}_{2}, \mathbf{x}_{n}\right)} \\ {\operatorname{cov}\left(\mathbf{x}_{n}, \mathbf{x}_{1}\right)} & {\operatorname{cov}\left(\mathbf{x}_{n}, \mathbf{x}_{2}\right)} & {\cdots} & {\operatorname{cov}\left(\mathbf{x}_{n}, \mathbf{x}_{n}\right)}\end{array}\right) \\ &= m\cdot \operatorname{cov}(X)
+\end{aligned}
+\end{equation}}
+$$
+E2=m\cdot \operatorname{cov}(X)
+$$
+	\end{enumerate}
+	\item Considerar la matriz \textbf{hat} definida en regresión, $\hat{\mathrm{H}}=\mathrm{X}\left(\mathrm{X}^{\mathrm{T}} \mathrm{X}\right)^{-1} \mathrm{X}^{\mathrm{T}}$, donde $X$ es la matriz de observaciones de dimensión $N \times(d+1), \mathrm{y} \mathrm{X}^{\mathrm{T}} \mathrm{X}$, y  $X^TX$ es invertible.
+	\begin{enumerate}
+		\item ¿Que representa la matriz $\hat{\mathrm{H}}$ en un modelo de regresión?
+		\item Identifique la propiedad mas relevante de dicha matriz en relación con regresión lineal.
+	\end{enumerate}
+	\item  La regla de adaptación de los pesos del Perceptron $\left(\mathbf{w}_{n e w}=\mathbf{w}_{o l d}+y \mathbf{x}\right)$ tiene la interesante propiedad de que mueve el vector de pesos en la dirección adecuada para clasificar $\textbf{x}$ de
+	forma correcta. Suponga el vector de pesos $\textbf{w}$ de un modelo y un dato $\textbf{x(t)}$ mal clasificado
+	respecto de dicho modelo. Probar matemáticamente que el movimiento de la regla de
+	adaptación de pesos siempre produce un movimiento de $\textbf{w}$ en la dirección correcta para
+	clasificar bien $\textbf{x(t)}$.
+	\item Sea un problema probabilistico de clasificación binaria con etiquetas $\{0,1\}$, es decir $\mathrm{P}(\mathrm{Y}=1)=h(\mathrm{x}) \mathrm{y} \mathrm{P}(\mathrm{Y}=0)=1-h(\mathrm{x})$, para una funcion $h()$ dependiente de la muestra.
+	\begin{enumerate}
+		\item  Considere  una muestra i.i.d. de tamaño $\mathrm{N}\left(\mathrm{x}_{1}, \cdots, \mathrm{x}_{N}\right)$. Mostrar que la funcion $h$ que maximiza la verosimilitud de la muestra es la misma que minimiza
+		$$E_{\mathrm{in}}(\mathbf{w})=\sum_{n=1}^{N}\left[y_{n}=1\right] \ln \frac{1}{h\left(\mathbf{x}_{n}\right)}+\left[y_{n}=0\right] \ln \frac{1}{1-h\left(\mathbf{x}_{n}\right)}$$ donde $[\cdot]$ vale 1 o 0 según que sea verdad o falso respectivamente la expresión en su interior.\\\\\textbf{Respuesta: }\\
+		Partiéremos de la función \textbf{likelihood} para ir transformándola hasta donde queremos llegar.
+		\begin{equation}
+		\begin{aligned}
+		\begin{split}
+		\notag
+			L(w) &=\prod_{i=1}^{N} P\left(y_{i} | \mathbf{x}_{i}\right) &= \prod_{i=1}^{N} \left[y_{n}=1\right] h\left(\mathbf{x}_{n}\right)+ \left[y_{n}=0\right] 1-h\left(\mathbf{x}_{n}\right)
+		\end{split}
+		\end{aligned}
+		\end{equation}
+		Ahora aplico le aplico el menos logaritmo para cambiar el productorio por un sumatorio y ademas se queden la inversa de $h(x)$ y $1-h(x)$.
+				\begin{equation}
+		\begin{aligned}
+		\begin{split}
+		\notag
+		 &-\ln(\prod_{i=1}^{N} \left[y_{n}=1\right] h\left(\mathbf{x}_{n}\right)  +  \left[y_{n}=0\right] 1-h\left(\mathbf{x}_{n}\right)) \\ &= \sum_{i=1}^{N} \left[y_{n}=1\right] -\ln(h\left(\mathbf{x}_{n}\right)) +  \left[y_{n}=0\right] -\ln(1-h\left(\mathbf{x}_{n}\right)) \\ 
+		 &= \sum_{i=1}^{N} \left[y_{n}=1\right] \ln(\frac{1}{h\left(\mathbf{x}_{n}\right)}) +  \left[y_{n}=0\right] \ln(\frac{1}{1-h\left(\mathbf{x}_{n}\right)})
+		\end{split}
+		\end{aligned}
+		\end{equation}
+		\item Para el caso $h(x)=\sigma\left(\mathbf{w}^{T} \mathbf{x}\right)$ mostrar que minimizar el error de la muestra en el apartado anterior es equivalente a minimizar el error muestral. 
+		$$E_{\mathrm{in}}(\mathbf{w})=\frac{1}{N} \sum_{n=1}^{N} \ln \left(1+e^{-y_{n} \mathbf{w}^{T} \mathbf{x}_{n}}\right)$$\\
+		\textbf{Respuesta: }\\
+						\begin{equation}
+		\begin{aligned}
+		\begin{split}
+		\notag
+		E_{\mathrm{in}}(\mathbf{w}) &=\sum_{n=1}^{N}\left[y_{n}=1\right] \ln \frac{1}{\sigma\left(\mathbf{w}^{T} \mathbf{x}\right))}+\left[y_{n}=0\right] \ln \frac{1}{1-\sigma\left(\mathbf{w}^{T} \mathbf{x}\right))}\\ &=
+		\sum_{n=1}^{N}\left[y_{n}=1\right] \ln \left(1+e^{\mathbf{w}^{T} \mathbf{x}_{n}}\right)-\mathbf{w}^{T} \mathbf{x}_{n}+\left[y_{n}=0\right] \ln \left(1+e^{\mathbf{w}^{T} \mathbf{x}_{n}}\right)\\ &=
+-\sum_{n=1}^{N}\left[y_{n}=1\right]\mathbf{w}^{T} \mathbf{x}_{n}+   \underbrace{\sum_{n=1}^{N}\left[y_{n}=0\right] \ln \left(1+e^{\mathbf{w}^{T} \mathbf{x}_{n}}\right)}
+		\end{split}
+		\end{aligned}
+		\end{equation}
+	\end{enumerate}
+\item Derivar el error $E_{in}$ para mostrar que en regresión logística se verifica: $$\nabla E_{\mathrm{in}}(\mathbf{w})=-\frac{1}{N} \sum_{n=1}^{N} \frac{y_{n} \mathbf{x}_{n}}{1+e^{y_{n} \mathbf{w}^{T} \mathbf{x}_{n}}}=\frac{1}{N} \sum_{n=1}^{N}-y_{n} \mathbf{x}_{n} \sigma\left(-y_{n} \mathbf{w}^{T} \mathbf{x}_{n}\right)$$
+Argumentar sobre si un ejemplo mal clasificado contribuye al gradiente más que un ejemplo bien clasificado.
+\item Definamos el error en un punto $(x_n,y_n)$ por $$\mathbf{e}_{n}(\mathbf{w})=\max \left(0,-y_{n} \mathbf{w}^{T} \mathbf{x}_{n}\right)$$ Argumentar si con esta función de error el algoritmo $PLA$ puede interpretarse como SGD sobre $e_n$ con tasa de aprendizaje $v=1$.
 \end{enumerate}
 
 \end{document}
