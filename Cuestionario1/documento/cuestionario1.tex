@@ -29,7 +29,7 @@ footskip=.2in]{geometry}
 
 \author{
   Antonio Jesús Heredia Castillo\\
-  \texttt{00000000A}
+  \texttt{76069518P}
 }
 
 \date{}
@@ -42,10 +42,15 @@ footskip=.2in]{geometry}
 		\item  Clasificación automática de cartas por distrito postal.\\\\
 		\textbf{Respuesta:}\\
 		Esto es un caso típico de aprendizaje supervisado. En este caso se creara un modelo capaz de reconocer los diferentes números y así poder saber el distrito postal al que pertenece la carta. En este caso los valores de entrada serán datos de la imagen del dígito. Estos valores puede ser como hemos visto en practicas la intensidad promedio y la simetría de la misma. Por otro lado la salida seria cual es el dígito que estamos clasificando. 
-		 
+		 \begin{itemize}
+		 	\item X = {simetría, intensidad promedio}
+		 	\item f = función desconocida
+		 	\item Y = {0,1,2,3,4,5,6,7,8,9}
+		 \end{itemize}
 		\item Decidir si un determinado índice del mercado de valores subirá o bajará dentro de un periodo de tiempo fijado. \\\\
 		\textbf{Respuesta:}\\
 		Aunque a priori puede parecer fácilmente abordable por aprendizaje supervisado, creo que seria mas conveniente abordarlo por aprendizaje reforzado. Ya que en la bolsa influye demasiadas variables y seria difícil tenerlas todas en cuenta por nosotros. En cambio para un modelo de aprendizaje por refuerzo seria mas fácil encontrar los patrones que se dan cuando recibe un ``refuerzo'' positivo o negativo(que suba o baje el valor) .
+
 		\item Hacer que un dron sea capaz de rodear un obstáculo\\\\		\textbf{Respuesta:}\\
 		En este caso usaría aprendizaje por refuerzo. Usaría un simulador de drones en una computadora, para que el dron real no tuviera daños. La ``recompensa'' recibida seria superar el obstáculo. De esta forma no necesitaríamos ningún conjunto de datos anterior para poder realizar el entrenamiento del dron.
 		
@@ -82,7 +87,6 @@ footskip=.2in]{geometry}
 	\begin{enumerate}
 		\item  $E 1=11^{T} \mathrm{X}$\\\\
 		\textbf{Respuesta:}\\
-
 
 \begin{equation}
 \begin{split}
@@ -181,8 +185,11 @@ $$
 	\end{enumerate}
 	\item Considerar la matriz \textbf{hat} definida en regresión, $\hat{\mathrm{H}}=\mathrm{X}\left(\mathrm{X}^{\mathrm{T}} \mathrm{X}\right)^{-1} \mathrm{X}^{\mathrm{T}}$, donde $X$ es la matriz de observaciones de dimensión $N \times(d+1), \mathrm{y} \mathrm{X}^{\mathrm{T}} \mathrm{X}$, y  $X^TX$ es invertible.
 	\begin{enumerate}
-		\item ¿Que representa la matriz $\hat{\mathrm{H}}$ en un modelo de regresión?
-		\item Identifique la propiedad mas relevante de dicha matriz en relación con regresión lineal.
+		\item ¿Que representa la matriz $\hat{\mathrm{H}}$ en un modelo de regresión?\\\\
+		\textbf{Respuesta:}\
+			Según \textcolor{red}{Learning from Data}\cite{Abu-Mostafa:2012:LD:2207825}, la matriz $\hat{H}$ representa cuando  $\nabla E_{\mathrm{in}}(\mathbf{w}) = 0$. Ademas como el enunciado nos indica que $X^TX$ es invertible, tenemos que $w=y\hat{H}$ es una solución única y optima. También podemos ver $\hat{H}$, como la matriz proyección que expresa los valores de las observaciones en la variable independiente y, en términos de combinación linear de ls columnas vector de la matriz modelo, X, que contiene las observaciones para cada una de las múltiples variables de las que estamos haciendo la regresión.\cite{208299}
+		\item Identifique la propiedad mas relevante de dicha matriz en relación con regresión lineal.\\\\\textbf{Respuesta: }\\
+		La propiedad mas relevante de la matriz es la idempotencia ($H²=H$).Ya que facilita el analisisde errores de la regresión lineal dentro y fuera de la muestra.\cite{Abu-Mostafa:2012:LD:2207825}
 	\end{enumerate}
 	\item  La regla de adaptación de los pesos del Perceptron $\left(\mathbf{w}_{n e w}=\mathbf{w}_{o l d}+y \mathbf{x}\right)$ tiene la interesante propiedad de que mueve el vector de pesos en la dirección adecuada para clasificar $\textbf{x}$ de
 	forma correcta. Suponga el vector de pesos $\textbf{w}$ de un modelo y un dato $\textbf{x(t)}$ mal clasificado
@@ -228,7 +235,29 @@ $$
 	\end{enumerate}
 \item Derivar el error $E_{in}$ para mostrar que en regresión logística se verifica: $$\nabla E_{\mathrm{in}}(\mathbf{w})=-\frac{1}{N} \sum_{n=1}^{N} \frac{y_{n} \mathbf{x}_{n}}{1+e^{y_{n} \mathbf{w}^{T} \mathbf{x}_{n}}}=\frac{1}{N} \sum_{n=1}^{N}-y_{n} \mathbf{x}_{n} \sigma\left(-y_{n} \mathbf{w}^{T} \mathbf{x}_{n}\right)$$
 Argumentar sobre si un ejemplo mal clasificado contribuye al gradiente más que un ejemplo bien clasificado.
-\item Definamos el error en un punto $(x_n,y_n)$ por $$\mathbf{e}_{n}(\mathbf{w})=\max \left(0,-y_{n} \mathbf{w}^{T} \mathbf{x}_{n}\right)$$ Argumentar si con esta función de error el algoritmo $PLA$ puede interpretarse como SGD sobre $e_n$ con tasa de aprendizaje $v=1$.
-\end{enumerate}
 
+\begin{equation}
+\begin{aligned}
+\notag
+E_{\mathrm{in}}(\mathbf{w})=\frac{1}{N} \sum_{i=0}^{N} \ln \left(1+e^{-y_{i} \mathbf{w}^{\mathrm{T}} \mathbf{x}_{i}}\right)
+\end{aligned}
+\end{equation}
+\begin{equation}
+\begin{aligned}
+\notag
+\nabla_{w} E_{\mathrm{in}}(\mathbf{w}) &=\frac{\partial}{\partial \mathbf{w}}\left(\frac{1}{N} \sum_{i=0}^{N} \ln \left(1+e^{-y_{i} \mathbf{w}^{\mathrm{T}} \mathbf{x}_{i}}\right)\right) \\ &= -\frac{1}{N} \sum_{i=0}^{N}y_{i} \mathbf{x}_{i} \frac{e^{-y_{i} \mathbf{w}^{\mathrm{T}} \mathbf{x}_{i}}}{1+e^{-y_{i} \mathbf{w}^{\mathrm{T}} \mathbf{x}_{i}}} \\ &= -\frac{1}{N} \sum_{i=0}^{N}y_{i} \mathbf{x}_{i} \frac{e^{-y_{i} \mathbf{w}^{\mathrm{T}} \mathbf{x}_{i}}e^{y_{i} \mathbf{w}^{\mathrm{T}} \mathbf{x}_{i}}}{(1+e^{-y_{i} \mathbf{w}^{\mathrm{T}} \mathbf{x}_{i}})e^{y_{i} \mathbf{w}^{\mathrm{T}} \mathbf{x}_{i}}} \\ &= =-\frac{1}{N} \sum_{n=1}^{N} \frac{y_{n} \mathbf{x}_{n}}{1+e^{y_{n} \mathbf{w}^{T} \mathbf{x}_{n}}} 
+\end{aligned}
+\end{equation}
+Si esta mas clasificado significa que la etiqueta y el valor predecido tienen distinto valor y por tanto $y_{n} \boldsymbol{w}^{T} \boldsymbol{x}_{n} < 0$. Y como sabemos que cuando un numero esta exponenciado a un numero negativo tenemos $0 < x 1$ y por lo tanto el denominador de la fracción sera menor que si los dos tuvieran el mismo signo y el exponente de la $e$ fuera positivo. Al ser menor el denominador, el resultado de la división sera mayor y por lo tanto ese ejemplo contribuiera mas al gradiente. 
+\item Definamos el error en un punto $(x_n,y_n)$ por $$\mathbf{e}_{n}(\mathbf{w})=\max \left(0,-y_{n} \mathbf{w}^{T} \mathbf{x}_{n}\right)$$ Argumentar si con esta función de error el algoritmo $PLA$ puede interpretarse como SGD sobre $e_n$ con tasa de aprendizaje $v=1$.\\\\\textbf{Respuesta:}\\
+El gradiente descendente actualiza $w$ a partir de los pesos anteriores restando el gradiente por una tasa de aprendizaje. Es decir : $$ w = w_0+\eta \frac{\partial E_{i n}(\mathbf{w})}{\partial w_{j}} = w_0+\eta \frac{\partial \max \left(0,-y_{n} \mathbf{w}^{T} \mathbf{x}_{n}\right)}{\partial w^{T}}$$
+Teniendo en cuanta que el enunciado nos dice que $\eta = 1$ obtenemos la siguiente:
+$$
+w = w_0-y_nx_n
+$$
+Esto es lo mismo que utiliza PLA para actualizar sus valores.
+\end{enumerate}
+\clearpage
+\bibliographystyle{plain}
+\bibliography{bibliografia}
 \end{document}
