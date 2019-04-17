@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 """
 TRABAJO 2.
-Nombre Estudiante:
+Nombre Estudiante: Antonio Jesus Heredia Castillo
 """
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.utils import shuffle
+
 
 
 # Fijamos la semilla
@@ -44,8 +45,15 @@ N=50
 dim = 2
 rango = [-50,50]
 sigma = [5,7]
-puntos_uni = simula_unif(N,2,rango)
-puntos_gau = simula_gaus(N,2,sigma)
+intervalo = [[-50,-50],[50,50]]
+
+puntos_uni = simula_unif(N,dim,rango)
+
+#simulo aqui la recta del ejercicio 2 de complejidad
+#para tener la misma recta que en el ejercicio de modelos lineales
+v = simula_recta(intervalo)
+
+puntos_gau = simula_gaus(N,dim,sigma)
 
 fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2)
 fig.suptitle("Ejercicio 1")
@@ -58,16 +66,14 @@ ax2.plot(puntos_gau[:,0],puntos_gau[:,1],'ro',c='red', label="normal")
 ax2.set_title('Gaussiana')
 ax2.set_xlabel('x')
 ax2.set_ylabel('y')
+
 print("-----------------Ejercicio 2----------------")
-intervalo = [[-50,-50],[50,50]]
-v = simula_recta(intervalo)
 f = lambda x, y,: y-v[0]*x-v[1]
 X = np.copy(puntos_uni)
 y = f(X[:,0],X[:,1])
 x = np.linspace(-50,50,2)
-
 fig2, (ax3,ax4) = plt.subplots(nrows=1, ncols=2)
-fig.suptitle("Ejercicio 2")
+fig2.suptitle("Ejercicio 2")
 ax3.set_title("Sin ruido")
 ax3.set_xlabel('x')
 ax3.set_ylabel('y')
@@ -96,6 +102,53 @@ ax4.plot(X[(y>0),0],X[(y>0),1],'ro',c='red', label="positivos")
 ax4.plot(X[(y<0),0],X[(y<0),1],'ro',c='blue', label="negativos")
 ax4.plot(x, v[0]*x+v[1],'--m', label='y=2x-3')
 ax4.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05), fancybox=True, shadow=True, ncol=3)
+
+print("-----------------Ejercicio 3----------------")
+print("-----------------Apartado A----------------")
+x0 = np.arange(-50,50,0.2)
+y0 = np.arange(-50,50,0.2)
+x0 = np.linspace(-50, 50, 50)
+y0 = np.linspace(-50, 50, 50)
+x0, y0 = np.meshgrid(x0, y0)
+
+fig3, ax = plt.subplots(2,2)
+fig3.suptitle("Ejercicio 3")
+ax[0,0].set_title("Primera funcion")
+f = lambda x, y,: ((x-10)*(x-10))+((y-20)*(y-20))-400
+funcion = f(x0,y0)
+ax[0,0].set_xlabel('x')
+ax[0,0].set_ylabel('y')
+ax[0,0].plot(X[(y>0),0],X[(y>0),1],'ro',c='red', label="positivos")
+ax[0,0].plot(X[(y<0),0],X[(y<0),1],'ro',c='blue', label="negativos")
+ax[0,0].contour(x0,y0,funcion,[0])
+
+ax[0,1].set_title("Segunda funcion funcion")
+f = lambda x, y,: (0.5*(x+10)*(x+10))+((y-20)*(y-20))-400
+funcion = f(x0,y0)
+ax[0,1].set_xlabel('x')
+ax[0,1].set_ylabel('y')
+ax[0,1].plot(X[(y>0),0],X[(y>0),1],'ro',c='red', label="positivos")
+ax[0,1].plot(X[(y<0),0],X[(y<0),1],'ro',c='blue', label="negativos")
+ax[0,1].contour(x0,y0,funcion,[0])
+
+
+ax[1,0].set_title("Tercera funcion funcion")
+f = lambda x, y,: (0.5*(x-10)*(x-10))+((y+20)*(y+20))-400
+funcion = f(x0,y0)
+ax[1,0].set_xlabel('x')
+ax[1,0].set_ylabel('y')
+ax[1,0].plot(X[(y>0),0],X[(y>0),1],'ro',c='red', label="positivos")
+ax[1,0].plot(X[(y<0),0],X[(y<0),1],'ro',c='blue', label="negativos")
+ax[1,0].contour(x0,y0,funcion,[0])
+
+ax[1,1].set_title("Cuarta funcion funcion")
+f = lambda x, y,: y-(20*x*x)-(5*x)+3
+funcion = f(x0,y0)
+ax[1,1].set_xlabel('x')
+ax[1,1].set_ylabel('y')
+ax[1,1].plot(X[(y>0),0],X[(y>0),1],'ro',c='red', label="positivos")
+ax[1,1].plot(X[(y<0),0],X[(y<0),1],'ro',c='blue', label="negativos")
+ax[1,1].contour(x0,y0,funcion,[0])
 ###############################################################################
 ###############################################################################
 ###############################################################################
