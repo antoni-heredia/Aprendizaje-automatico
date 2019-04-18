@@ -6,6 +6,7 @@ Nombre Estudiante: Antonio Jesus Heredia Castillo
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.utils import shuffle
+import math
 
 
 # Fijamos la semilla
@@ -53,23 +54,26 @@ def ajusta_PLA(datos, label, max_iter, vini):
                 _cant_cambios += 1
     return _w,_iteraciones
 
+def grandienteSumatorio(_X, _y, _w):
+    sumatorio = 0
+    for xi in range(0,_y.size):
+        sumatorio += -_y[xi]*_X[xi]*( (math.exp( -_y[xi]*_w.T@_X[xi])) / (1+math.exp( -_y[xi]*_w.T@_X[xi])) )
+    return (1/_y.size)*sumatorio
 
-def gradiente_estocastico(_X_train, _y_train,_minibatch_size=None, _lr=0.01, _iteraciones=1000, _epsilon=0.08):
-    _w = np.zeros([3])
-    _N = _y_train.shape[0]
+def gradiente_estocastico(_X_train, _y_train,_minibatch_size=None, _lr=0.01, _iteraciones=1000, _epsilon=0.01):
+    w = np.zeros([3])
 
-    _gradiente = lambda x, _X, _y: (2/_N)*( _X.T @ ( _X  @ x)- _X.T@ _y)
-    _error =  error(_X_train, _y_train,_w)
     _iter = 0
     #en el caso de que el usuario no introduzca un tamaño lo calculo yo
     if _minibatch_size == None:
         _minibatch_size = np.int(np.ceil(np.log2(len(_X_train))*5))
-
+    w_anterior = w+1
     #mientras el error no sea menor a lo que yo quiero o no se alcance el numero maximo de iteraciones
-    while _error >_epsilon and _iter < _iteraciones:
+    while  np.linalg.norm(w_anterior-w) >_epsilon and _iter < _iteraciones:
 
         #realizo la mezcla de los datos
         _batch, _y_batch = shuffle(_X_train, _y_train)
+        w_anterior = np.copy(w)
 
         #cojo minibatchs hasta que se acaben
         while _batch.shape[0] != 0:
@@ -80,15 +84,13 @@ def gradiente_estocastico(_X_train, _y_train,_minibatch_size=None, _lr=0.01, _it
             #elemino ese minibatch para no coger en la siguiente iteracion
             _batch = np.delete(_batch,np.s_[:_minibatch_size:], axis = 0)
             _y_batch = np.delete(_y_batch,np.s_[:_minibatch_size:])
-
             #calculo el gradiente
-            _w = _w - _lr * _gradiente(_w, _minibatch, _y_mini)
+            w = w - _lr * grandienteSumatorio(_minibatch, _y_mini,w)
         #aumento el numero de iteraciones
         _iter =_iter+1
     #calculo el error de este batch
-    _error = error(_X_train, _y_train,_w)
     #devuelvo el mejor _w y el error conseguido con ese _w
-    return _w, _error
+    return  w
 
 
 print("-----------------Modelos Lineales-----------------")
@@ -182,6 +184,38 @@ ax2.set_ylabel('y')
 ax2.plot(X[(y>0),0],X[(y>0),1],'ro',c='red', label="positivos")
 ax2.plot(X[(y<0),0],X[(y<0),1],'ro',c='blue', label="negativos")
 ax2.plot(x, A*x+B,'--m', label='recta')
+
+
+print("-----------------Ejercicio 2----------------")
+
+datos = simula_unif(100,2,(0,2))
+v = simula_recta((0,2))
+x = np.linspace(-0,2,2)
+f = lambda x, y,: y-v[0]*x-v[1]
+y = f(datos[:,0],datos[:,1])
+y[(y>0)] = 1
+y[(y<0)] = -1
+
+
+
+_X =  np.insert(datos,0,1,axis=1)
+pesos = gradiente_estocastico(_X,y,1)
+
+A = (-(pesos[0] / pesos[2]) / (pesos[0] / pesos[1]))
+B =  (-pesos[0] / pesos[2])
+
+fig2, ax = plt.subplots(nrows=1, ncols=1)
+fig2.suptitle("Ejercicio 2")
+
+ax.set_title("Sin ruido")
+ax.set_xlabel('x')
+ax.set_ylabel('y')
+ax.plot(x, v[0]*x+v[1] ,'--m', label='recta')
+ax.plot(datos[(y>0),0],datos[(y>0),1],'ro',c='red', label="positivos")
+ax.plot(datos[(y<0),0],datos[(y<0),1],'ro',c='blue', label="negativos")
+
+x = np.linspace(-0,2,2)
+ax.plot(x, A*x+B,'--m',c='yellow', label='sgd')
 
 ###############################################################################
 ###############################################################################

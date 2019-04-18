@@ -133,7 +133,7 @@ ax[0,1].contour(x0,y0,funcion,[0])
 
 
 ax[1,0].set_title("Tercera funcion funcion")
-f = lambda x, y,: (0.5*(x-10)*(x-10))+((y+20)*(y+20))-400
+f = lambda x, y,: (0.5*(x-10)*(x-10))-((y+20)*(y+20))-400
 funcion = f(x0,y0)
 ax[1,0].set_xlabel('x')
 ax[1,0].set_ylabel('y')
