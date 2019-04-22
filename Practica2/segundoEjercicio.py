@@ -92,7 +92,11 @@ def gradiente_estocastico(_X_train, _y_train,_minibatch_size=None, _lr=0.01, _it
     #devuelvo el mejor _w y el error conseguido con ese _w
     return  w
 
-
+def error(datos,etiquetas,pesos):
+    sumatoria = 0
+    for xi in range(0,etiquetas.size):
+        sumatoria += math.log(1+math.exp(-etiquetas[xi]*pesos.T@datos[xi]))
+    return  (1/etiquetas.size)*sumatoria
 print("-----------------Modelos Lineales-----------------")
 print("-----------------Ejercicio 1----------------")
 N=50
@@ -155,8 +159,10 @@ for index, _x in np.ndenumerate(y):
 
 pesos = np.zeros((X[0].size+1))
 pesos,iteracionesCON = ajusta_PLA(X,y,1000,pesos)
+input("Pulsa  Enter para continuar al siguiente apartado...")
+
 print("------Apartado b------")
-print("Cantidad de iteraciones inicializado a 0: "+str(iteracionesSIN))
+print("Cantidad de iteraciones inicializado a 0: "+str(iteracionesCON))
 
 fig2, (ax1,ax2) = plt.subplots(nrows=1, ncols=2)
 fig2.suptitle("Ejercicio 1-Perceptron-Apartado B")
@@ -165,7 +171,7 @@ ax1.set_xlabel('x')
 ax1.set_ylabel('y')
 ax1.plot(X[(y>0),0],X[(y>0),1],'ro',c='red', label="positivos")
 ax1.plot(X[(y<0),0],X[(y<0),1],'ro',c='blue', label="negativos")
-ax1.plot(x, A*x+B,'--m', label='recta')
+ax1.plot(x, A*x+B,'--m', label='Perceptron')
 
 iteracionesSumatoria = 0
 pesos = 0
@@ -183,10 +189,13 @@ ax2.set_xlabel('x')
 ax2.set_ylabel('y')
 ax2.plot(X[(y>0),0],X[(y>0),1],'ro',c='red', label="positivos")
 ax2.plot(X[(y<0),0],X[(y<0),1],'ro',c='blue', label="negativos")
-ax2.plot(x, A*x+B,'--m', label='recta')
+ax2.plot(x, A*x+B,'--m', label='Perceptron')
+ax2.legend(fancybox=True, shadow=True, ncol=3)
 
+input("Pulsa  Enter para continuar al siguiente apartado...")
 
 print("-----------------Ejercicio 2----------------")
+print("-----------------Apartado A----------------")
 
 datos = simula_unif(100,2,(0,2))
 v = simula_recta((0,2))
@@ -205,18 +214,48 @@ A = (-(pesos[0] / pesos[2]) / (pesos[0] / pesos[1]))
 B =  (-pesos[0] / pesos[2])
 
 fig2, ax = plt.subplots(nrows=1, ncols=1)
-fig2.suptitle("Ejercicio 2")
+fig2.suptitle("Ejercicio 2-Apartado A")
 
-ax.set_title("Sin ruido")
+ax.set_title("Regresion logistica")
 ax.set_xlabel('x')
 ax.set_ylabel('y')
-ax.plot(x, v[0]*x+v[1] ,'--m', label='recta')
+ax.plot(x, v[0]*x+v[1] ,'--m', label='Plano frontera')
 ax.plot(datos[(y>0),0],datos[(y>0),1],'ro',c='red', label="positivos")
 ax.plot(datos[(y<0),0],datos[(y<0),1],'ro',c='blue', label="negativos")
 
 x = np.linspace(-0,2,2)
-ax.plot(x, A*x+B,'--m',c='yellow', label='sgd')
+ax.plot(x, A*x+B,'--m',c='orange', label='RL')
+ax.legend(fancybox=True, shadow=True, ncol=3)
 
+input("Pulsa  Enter para continuar al siguiente apartado...")
+print("-----------------Apartado B----------------")
+
+datos = simula_unif(1000,2,(0,2))
+x = np.linspace(-0,2,2)
+f = lambda x, y,: y-v[0]*x-v[1]
+y = f(datos[:,0],datos[:,1])
+y[(y>0)] = 1
+y[(y<0)] = -1
+
+fig2, ax = plt.subplots(nrows=1, ncols=1)
+fig2.suptitle("Ejercicio 2-Apartado B")
+
+ax.set_title("Regresion logistica")
+ax.set_xlim([0,2])
+ax.set_ylim([0,2])
+
+ax.set_xlabel('x')
+ax.set_ylabel('y')
+ax.plot(x, v[0]*x+v[1] ,'--m', label='Plano frontera')
+ax.plot(datos[(y>0),0],datos[(y>0),1],'ro',c='red', label="positivos")
+ax.plot(datos[(y<0),0],datos[(y<0),1],'ro',c='blue', label="negativos")
+
+x = np.linspace(-0,2,2)
+ax.plot(x, A*x+B,'--m',c='orange', label='RL')
+ax.legend(fancybox=True, shadow=True, ncol=3)
+datos =  np.insert(datos,0,1,axis=1)
+
+print("Error en la nueva muestra: "+str(error(datos,y,pesos)))
 ###############################################################################
 ###############################################################################
 ###############################################################################
