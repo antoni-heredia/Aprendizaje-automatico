@@ -6,7 +6,9 @@
 \newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
 \usepackage{listings}             % Incluye el paquete listing
 \usepackage[cache=false]{minted}
-\usepackage{graphics,graphicx, float} %para incluir imágenes y colocarlas
+\usepackage{graphicx, float} %para incluir imágenes y colocarlas
+\usepackage{epstopdf}
+
 \usepackage{hyperref}
 \hypersetup{
 	colorlinks,
@@ -76,10 +78,9 @@
 \end{figure}
 
 \subsubsection{Modifique de forma aleatoria un $10\%$ etiquetas positivas y otro $10\%$ etiquetas negativas y guarde los puntos con sus nuevas etiquetas. Dibuje de nuevo la gráfica anterior(Ahora hay puntos mal clasificados respecto a la recta))}
-	
 \begin{figure}[H]  %con el [H] le obligamos a situar aquí la figura
 	\centering
-	\includegraphics{images/ejercicio2Conruido.png}  
+	\includegraphics{images/ejercicio2ConRuido.png}  
 	\caption{Puntos ``con ruido'' clasificados con la función $f(x,y)=y-ax-b$}
 	\label{figura4}
 \end{figure}
