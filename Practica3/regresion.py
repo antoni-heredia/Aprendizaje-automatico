@@ -43,10 +43,10 @@ min_max_scaler = preprocessing.MinMaxScaler()
 X = min_max_scaler.fit_transform(X)
 
 #Elimina las columnas que no aportan nada
-selector = VarianceThreshold()
+selector = VarianceThreshold(threshold=0.01)
 X = selector.fit_transform(X)
 
-poly = PolynomialFeatures(degree=2)
+poly = PolynomialFeatures(degree=4)
 X = poly.fit_transform(X)
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.30, random_state=42)

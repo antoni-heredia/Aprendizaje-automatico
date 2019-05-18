@@ -38,7 +38,7 @@ def confusionMatrix(prediccion, y_test, titulo):
             plt.annotate(str(cm[x][y]), xy=(y, x), 
             horizontalalignment='center',
             verticalalignment='center')
-    plt.plot()
+    plt.show()
 
 
 
@@ -71,17 +71,18 @@ X_train = X[X_test.shape[0]:,:]
 model = linear_model.LogisticRegression( penalty='l2', multi_class='ovr', C=1)
 model.fit(X_train,y_train.ravel())
 print("---------Regresion logistica---------")
-print("E_in: "+str(model.score(X_train,y_train)))
 
 prediccion = model.predict(X_test)
 confusionMatrix(prediccion, y_test, "CM de la Regresion Logistica")
-
+print("E_in: "+str(model.score(X_train,y_train)))
 print("E_out: "+str(model.score(X_test,y_test)))
 
-perceptron = linear_model.Perceptron(tol=0, penalty='l1')
 
 print("---------Perceptron---------")
-
+perceptron = linear_model.Perceptron(tol=0, penalty='l1')
 perceptron.fit(X_train,y_train.ravel())
+prediccion = perceptron.predict(X_test)
+confusionMatrix(prediccion, y_test, "CM del Perceptron")
+
 print("E_in: "+str(perceptron.score(X_train,y_train)))
 print("E_out: "+str(perceptron.score(X_test,y_test)))
