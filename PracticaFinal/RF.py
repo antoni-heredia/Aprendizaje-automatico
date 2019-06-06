@@ -123,14 +123,14 @@ def primerDataSet():
     train_X,test_X = anadirInformacionPolinomial(train_X,test_X,2)
 
     start_time = time()
-    clf = RandomForestClassifier(n_estimators=200, max_depth=15, random_state=0)
+    clf = RandomForestClassifier(n_estimators=200, random_state=0)
     clf.fit(train_X, train_y)  
     
 
     #print(clf.feature_importances_)
     print("Tiempo =", time() - start_time )
-    print("E_in = ", 100 * clf.score(train_X, train_y))
-    print("E_out = ", 100 * clf.score(test_X, test_y))
+    print("E_in = ", 100 - (100 * clf.score(train_X, train_y)))
+    print("E_out = ", 100 - ( 100 * clf.score(test_X, test_y)))
     
    
     y_predecido = clf.predict(test_X);
@@ -139,12 +139,51 @@ def primerDataSet():
     plot_confusion_matrix2(test_y, y_predecido, classes=[0,1,2,3,4,5,6,7,8,9], normalize=True,
                     title='Matriz de confusion')
     
+
+def calcularParticion():
+    train_X, train_y = loadCSV(fichero_train)
+    test_X, test_y = loadCSV(fichero_test)
     
+    train_X = normalizarDatos(train_X)   
+    test_X = normalizarDatos(test_X)
+    
+    #train_X,test_X = eliminarVarianza(train_X,test_X, 0);
+    train_X,test_X = anadirInformacionPolinomial(train_X,test_X,2)
+    
+    
+    i = 10;
+    #num_variables = np.sqrt(i)
+    while (i <= 500):
+        
+        start_time = time()
+        clf = RandomForestClassifier(n_estimators=i, max_features = int(len(train_X[0]) / 2),  random_state=0)
+        clf.fit(train_X, train_y)  
+        print( i,",", 100 - (100 * clf.score(test_X, test_y)), time() - start_time )
+        i += 10
+
+    #print(clf.feature_importances_)
+    
+ 
+   
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
 def main():
     print("--------------------------------------------------")
     print("Pen-Based Recognition of Handwritten Digits Data Set con RF")
     primerDataSet()
     print("--------------------------------------------------")
+    
+    calcularParticion()
     
 
     
