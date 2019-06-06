@@ -112,20 +112,27 @@ def anadirInformacionPolinomial(train_X, test_X, grado = 2):
     return train_X, test_X
 
 def primerDataSet():
-    train_X, train_y = loadCSV(fichero_train)
+    datos_X, datos_y = loadCSV(fichero_train)
     test_X, test_y = loadCSV(fichero_test)
     
-    train_X = normalizarDatos(train_X)   
-    test_X = normalizarDatos(test_X)
+    #datos = normalizarDatos(datos)   
+    
+    
+    #test_X = normalizarDatos(test_X)
     
     #train_X,test_X = eliminarVarianza(train_X,test_X, 0);
     
-    train_X,test_X = anadirInformacionPolinomial(train_X,test_X,2)
+    datos_X,test_X = anadirInformacionPolinomial(datos_X,test_X,2)
+    train_X = datos_X[:5621, ]
+    train_y = datos_y[:5621, ]
+    
+    validacion_X = datos_X[5621:, ]
+    validacion_y = datos_y[5621:, ]
 
     start_time = time()
     clf = RandomForestClassifier(n_estimators=200, random_state=0)
     clf.fit(train_X, train_y)  
-    
+
 
     #print(clf.feature_importances_)
     print("Tiempo =", time() - start_time )
@@ -137,32 +144,70 @@ def primerDataSet():
     matriz_confusion = confusion_matrix(test_y, y_predecido)
     matriz_confusion =  matriz_confusion /  matriz_confusion.sum(axis=1) 
     plot_confusion_matrix2(test_y, y_predecido, classes=[0,1,2,3,4,5,6,7,8,9], normalize=True,
-                    title='Matriz de confusion')
+                    title='Matriz de confusion RF')
     
 
 def calcularParticion():
-    train_X, train_y = loadCSV(fichero_train)
+    datos_X, datos_y = loadCSV(fichero_train)
     test_X, test_y = loadCSV(fichero_test)
     
-    train_X = normalizarDatos(train_X)   
-    test_X = normalizarDatos(test_X)
+    #datos = normalizarDatos(datos)   
+    
+    
+    #test_X = normalizarDatos(test_X)
     
     #train_X,test_X = eliminarVarianza(train_X,test_X, 0);
-    train_X,test_X = anadirInformacionPolinomial(train_X,test_X,2)
+    
+    datos_X,test_X = anadirInformacionPolinomial(datos_X,test_X,2)
+    train_X = datos_X[:5621, ]
+    train_y = datos_y[:5621, ]
+    
+    validacion_X = datos_X[5621:, ]
+    validacion_y = datos_y[5621:, ]
     
     
     i = 10;
     #num_variables = np.sqrt(i)
-    while (i <= 500):
+    while (i <= 250):
         
         start_time = time()
-        clf = RandomForestClassifier(n_estimators=i, max_features = int(len(train_X[0]) / 2),  random_state=0)
+        clf = RandomForestClassifier(n_estimators=i,  random_state=0)
         clf.fit(train_X, train_y)  
-        print( i,",", 100 - (100 * clf.score(test_X, test_y)), time() - start_time )
+        print( i,",", 100 - (100 * clf.score(validacion_X, validacion_y)), ",", time() - start_time )
         i += 10
 
     #print(clf.feature_importances_)
-    
+
+
+def imprimirEstadisticas():
+      raiz = np.genfromtxt("datos/rfraiz.dat", delimiter= ",")
+      mitad = np.genfromtxt("datos/rfmitad.dat", delimiter= ",")
+      igual = np.genfromtxt("datos/rfigual.dat", delimiter= ",")
+      
+      # evenly sampled time at 200ms intervals
+      plt.figure()
+
+      plt.plot(raiz[:,0], raiz[:,1], 'r-') 
+      plt.plot(mitad[:,0], mitad[:,1], 'b-')
+      plt.plot(igual[:,0], igual[:,1], 'g-')
+      plt.gca().legend(('m=sqrt(p)','m=p/2', 'm=p'))
+      plt.ylabel("Error en validación")
+      plt.xlabel("Nuero de árboles")
+      plt.title("Error en muestra para parametro m")
+      
+      plt.show()
+      
+      plt.figure()
+
+      plt.plot(raiz[:,0], raiz[:,2], 'r-') 
+      plt.plot(mitad[:,0], mitad[:,2], 'b-')
+      plt.plot(igual[:,0], igual[:,2], 'g-')
+      plt.gca().legend(('m=sqrt(p)','m=p/2', 'm=p'))
+      plt.ylabel("Tiempo de ejecución(s)")
+      plt.xlabel("Nuero de árboles")
+      plt.title("Tiempos de ejecución para parametro m")
+      
+      plt.show()
  
    
     
@@ -182,8 +227,8 @@ def main():
     print("Pen-Based Recognition of Handwritten Digits Data Set con RF")
     primerDataSet()
     print("--------------------------------------------------")
-    
-    calcularParticion()
+    imprimirEstadisticas()
+    #calcularParticion()
     
 
     
