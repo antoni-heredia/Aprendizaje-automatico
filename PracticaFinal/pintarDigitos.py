@@ -71,13 +71,15 @@ X=[
 
 x = []
 y = []
+plt.figure(1)
+
 for i in range(len(X)):
     if i%2 == 0:
         x.append(X[i])
     else:
         y.append(X[i])
-plt.xlim(200,400)
-plt.ylim(200,400)
+plt.xlim(0,500)
+plt.ylim(0,500)
 plt.gca().set_aspect('equal', adjustable='box')
 plt.plot(x, y, 'r--')
 plt.show()
@@ -89,6 +91,7 @@ for i in range(len(X)):
         x.append(X[i])
     else:
         y.append(X[i])
+plt.figure(2)
 plt.xlim(0,100)
 plt.ylim(0,100)
 plt.plot(x, y, 'r--')
@@ -115,6 +118,7 @@ for i in range(len(X)):
         x.append(X[i])
     else:
         y.append(X[i])
+plt.figure(3)
 
 plt.xlim(0,500)
 plt.ylim(0,500)
@@ -130,9 +134,9 @@ for i in range(len(X)):
         x.append(X[i])
     else:
         y.append(X[i])
-
-plt.xlim(0,200)
-plt.ylim(0,200)
+plt.figure(4)
+plt.xlim(0,100)
+plt.ylim(0,100)
 plt.gca().set_aspect('equal', adjustable='box')
 plt.plot(x, y, 'r--')
 plt.show()

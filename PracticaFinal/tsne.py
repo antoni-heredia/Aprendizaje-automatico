@@ -23,8 +23,6 @@ n_classes = 10
 X,y = leerArchivo("datos/pendigits.tra")
 y = y.ravel()
 
-X,y = leerArchivo("datos/pendigits.tes")
-y = y.ravel()
 
 
 tsne = TSNE(n_components=2, verbose=1, perplexity=40, n_iter=300)
@@ -33,12 +31,12 @@ tsne_results = tsne.fit_transform(X)
 
 
 
-dataset = pd.DataFrame({'Column1':tsne_results[:,0],'Column2':tsne_results[:,1],'y':y})
+dataset = pd.DataFrame({'EjeX':tsne_results[:,0],'EjeY':tsne_results[:,1],'y':y})
 
 
 plt.figure(figsize=(16,10))
 sns.scatterplot(
-    x="Column1", y="Column2",
+    x="EjeX", y="EjeY",
     hue="y",
     palette=sns.color_palette("hls", 10),
     data=dataset,

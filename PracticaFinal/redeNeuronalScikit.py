@@ -25,7 +25,7 @@ def leerArchivo(ruta):
 X_test,y_test = leerArchivo("datos/pendigits.tes")
 X,y = leerArchivo("datos/pendigits.tra")
 
-scaler   StandardScaler()  
+scaler = StandardScaler()  
 # Don't cheat - fit only on training data
 scaler.fit(X)  
 X = scaler.transform(X)  
@@ -33,12 +33,7 @@ X = scaler.transform(X)
 X_test = scaler.transform(X_test)  
 
 
-# Let's say, components = 2 
-pca = PCA(n_components = 16) 
-pca.fit(X) 
-X = pca.transform(X) 
-  
-X_test = pca.transform(X_test) 
+
 
 
 clf = MLPClassifier(solver='adam',activation="relu", hidden_layer_sizes=(3, 256), batch_size="auto", verbose=1)
