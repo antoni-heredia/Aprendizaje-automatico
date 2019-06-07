@@ -130,15 +130,22 @@ def anadirInformacionPolinomial(train_X, test_X, grado = 2):
     return train_X, test_X
 
 def primerDataSet():
-    train_X, train_y = loadCSV(fichero_train)
+    datos_X, datos_y = loadCSV(fichero_train)
     test_X, test_y = loadCSV(fichero_test)
     
-    train_X = normalizarDatos(train_X)   
-    test_X = normalizarDatos(test_X)
+    #datos = normalizarDatos(datos)   
+    
+    
+    #test_X = normalizarDatos(test_X)
     
     #train_X,test_X = eliminarVarianza(train_X,test_X, 0);
     
-    train_X,test_X = anadirInformacionPolinomial(train_X,test_X,2)
+    datos_X,test_X = anadirInformacionPolinomial(datos_X,test_X,2)
+    train_X = datos_X[:5621, ]
+    train_y = datos_y[:5621, ]
+    
+    validacion_X = datos_X[5621:, ]
+    validacion_y = datos_y[5621:, ]
     regularizacion = 'l2'
     
 
@@ -154,7 +161,7 @@ def primerDataSet():
    
     
     start_time = time()
-    acieto_test, acierto_train,y_predecido_mejorada = regresionLinealEntrenarMejorado(train_X,train_y,test_X,test_y,regularizacion,500)
+    acieto_test, acierto_train,y_predecido_mejorada = regresionLinealEntrenarMejorado(train_X,train_y,test_X,test_y,regularizacion,100)
     print("Regresion logistica mejorada")
     print("Tiempo=", time() - start_time )
     print("Ein = ",(1-acierto_train)*100)
@@ -174,14 +181,107 @@ def primerDataSet():
     
     #plot_confusion_matrix(matriz_confusion)
     plot_confusion_matrix2(test_y, y_predecido_mejorada, classes=[0,1,2,3,4,5,6,7,8,9], normalize=True,
-                      title='Matriz de confusion regresion logistica mejorada')
+                      title='Matriz de confusion regresion logistica')
     
     
     
    
     
+
+
+def medirParametroRegularizacion():
+    datos_X, datos_y = loadCSV(fichero_train)
+    test_X, test_y = loadCSV(fichero_test)
+    
+    #datos = normalizarDatos(datos)   
     
     
+    #test_X = normalizarDatos(test_X)
+    
+    #train_X,test_X = eliminarVarianza(train_X,test_X, 0);
+    
+    datos_X,test_X = anadirInformacionPolinomial(datos_X,test_X,2)
+    train_X = datos_X[:5621, ]
+    train_y = datos_y[:5621, ]
+    
+    validacion_X = datos_X[5621:, ]
+    validacion_y = datos_y[5621:, ]
+    regularizacion = 'l1'
+    
+    i = 1
+    while i <= 100:
+        
+        start_time = time()
+        acierto_validacion, acierto_train,y_predecido_mejorada = regresionLinealEntrenarMejorado(train_X,train_y,validacion_X,validacion_y,regularizacion,i)
+       
+    
+        print(i, "," , (1-acierto_validacion)*100, ",", time() - start_time)
+        i += 2
+        
+        
+def imprimirEstadisticas():
+      l1 = np.genfromtxt("datos/rlregularizacionl1.dat", delimiter= ",")
+      l2 = np.genfromtxt("datos/rlregularizacionl2.dat", delimiter= ",")
+      
+      # evenly sampled time at 200ms intervals
+      
+      """
+    p = np.polyfit(l1[:,0],l1[:,1], 1)
+    p2 = np.polyfit(l2[:,0],l2[:,1], 1)
+    
+    # Valores de y calculados del ajuste
+    y_ajuste = p[0]*l1[:,0] + p[1]
+    y_ajuste2 =p2[0]*l2[:,0] + p2[1]
+    # Dibujamos los datos experimentales
+    p_datos, = plt.plot(l1[:,0], l1[:,1], 'r.')
+    # Dibujamos la recta de ajuste
+
+    #plt.plot(l1[:,0], y_ajuste, 'g-')
+    plt.plot(l1[:,0], y_ajuste2, 'b-')
+    plt.title('Mejora con metrica l1')
+    
+    plt.xlabel('Parametro C')
+    plt.ylabel('Tasa Acierto')
+    plt.axis([2,500,0.9750,0.9825])
+    blue_patch = mpatches.Patch(color='red', label='Medidas tomadas')
+    green_patch = mpatches.Patch(color='blue', label='Funcion ajustada')
+    
+    #añadimos al legend los distintos tipos
+    plt.legend(handles=[blue_patch,green_patch])
+    
+    plt.show()
+    #Calculo de mejoras con regularizacion l1 y l2.
+    #obtenerDatosRegularizacion(train_X,train_y,test_X,test_y, regularizacion)"""
+      plt.figure()
+
+      #plt.plot(l1[:,0], l1[:,1], 'r-') 
+      #plt.plot(l2[:,0], l2[:,1], 'b-')
+      p = np.polyfit(l1[:,0],l1[:,1], 1)
+      p2 = np.polyfit(l2[:,0],l2[:,1], 1)
+      y_ajuste = p[0]*l1[:,0] + p[1]
+      y_ajuste2 =p2[0]*l2[:,0] + p2[1]
+
+      plt.plot(l1[:,0], y_ajuste, 'r-')
+      plt.plot(l2[:,0], y_ajuste2, 'b-')
+      
+      
+      plt.gca().legend(('l1','l2'))
+      plt.ylabel("Error en validación(%)")
+      plt.xlabel("Parametro de regularacion")
+      plt.title("Error en validacion")
+      
+      plt.show()
+      
+      plt.figure()
+
+      plt.plot(l1[:,0], l1[:,2], 'r-') 
+      plt.plot(l2[:,0], l2[:,2], 'b-')
+      plt.gca().legend(('l1','l2'))
+      plt.ylabel("Tiempo de ejecución(s)")
+      plt.xlabel("Parametro de regularacion")
+      plt.title("Tiempos de ejecución para regularizacion")
+      
+      plt.show()    
     
 def main():
  
@@ -190,11 +290,12 @@ def main():
     primerDataSet()
     print("--------------------------------------------------")
     
-    
-    
+    #medirParametroRegularizacion()
+    imprimirEstadisticas()
     #segundoDataSet()
     
-    
+
+ 
     
     
     

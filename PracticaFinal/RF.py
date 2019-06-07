@@ -166,15 +166,15 @@ def calcularParticion():
     validacion_y = datos_y[5621:, ]
     
     
-    i = 10;
+    i = 1;
     #num_variables = np.sqrt(i)
-    while (i <= 250):
+    while (i <= 100):
         
         start_time = time()
-        clf = RandomForestClassifier(n_estimators=i,  random_state=0)
+        clf = RandomForestClassifier(n_estimators=i, random_state=0)
         clf.fit(train_X, train_y)  
         print( i,",", 100 - (100 * clf.score(validacion_X, validacion_y)), ",", time() - start_time )
-        i += 10
+        i += 2
 
     #print(clf.feature_importances_)
 
@@ -227,7 +227,7 @@ def main():
     print("Pen-Based Recognition of Handwritten Digits Data Set con RF")
     primerDataSet()
     print("--------------------------------------------------")
-    imprimirEstadisticas()
+    #imprimirEstadisticas()
     #calcularParticion()
     
 
