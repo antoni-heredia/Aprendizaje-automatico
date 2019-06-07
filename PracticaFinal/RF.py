@@ -148,7 +148,8 @@ def primerDataSet():
     plot_confusion_matrix2(test_y, y_predecido, classes=[0,1,2,3,4,5,6,7,8,9], normalize=True,
                     title='Matriz de confusion RF')
     
-
+"""Utilizada para la medicion de los datos de la grafica. Los datos que muestra han sido 
+copieados en los ficheros .dat"""
 def calcularParticion():
     datos_X, datos_y = loadCSV(fichero_train)
     test_X, test_y = loadCSV(fichero_test)
@@ -180,36 +181,8 @@ def calcularParticion():
 
     #print(clf.feature_importances_)
 
-def calcularMejorProfundidad():
-    datos_X, datos_y = loadCSV(fichero_train)
-    test_X, test_y = loadCSV(fichero_test)
-    
-    #datos = normalizarDatos(datos)   
-    
-    
-    #test_X = normalizarDatos(test_X)
-    
-    #train_X,test_X = eliminarVarianza(train_X,test_X, 0);
-    
-    datos_X,test_X = anadirInformacionPolinomial(datos_X,test_X,2)
-    train_X = datos_X[:5621, ]
-    train_y = datos_y[:5621, ]
-    
-    validacion_X = datos_X[5621:, ]
-    validacion_y = datos_y[5621:, ]
-    
-    
-    i = 1;
-    #num_variables = np.sqrt(i)
-    while (i <= 15):
         
-        
-        clf = RandomForestClassifier(n_estimators=100, random_state=0,max_depth = i)
-        clf.fit(train_X, train_y)  
-        print( i,",", 100 - (100 * clf.score(validacion_X, validacion_y)), ",", 100 - (100 * clf.score(train_X, train_y)) )
-        i += 1
-        
-        
+"""La he usado para cargar los datos de los csv y mostrar la grafica"""        
 def imprimirEstadisticas():
       raiz = np.genfromtxt("datos/rfraiz.dat", delimiter= ",")
       mitad = np.genfromtxt("datos/rfmitad.dat", delimiter= ",")
@@ -240,35 +213,7 @@ def imprimirEstadisticas():
       
       plt.show()
       
-def imprimirProfundidad():
-      profundidad = np.genfromtxt("datos/rfprofundidad.dat", delimiter= ",")
 
-      
-      # evenly sampled time at 200ms intervals
-      plt.figure()
-
-      plt.plot(profundidad[:,0], profundidad[:,1], 'r-') 
-      
- 
-      plt.gca().legend('Error en validacion')
-      plt.ylabel("Error en validación(0%-100%)")
-      plt.xlabel("Profundidad")
-      plt.title("Error con optimizacion en validacion")
-      
-      plt.show()    
-      
-      plt.figure()
-
-      
-      plt.plot(profundidad[:,0], profundidad[:,2], 'b-') 
- 
-      plt.gca().legend('Error en train')
-      plt.ylabel("Error en validación(0%-100%)")
-      plt.xlabel("Profundidad")
-      plt.title("Error con optimizacion en train")
-      
-      plt.show()    
-    
 
 
 def main():

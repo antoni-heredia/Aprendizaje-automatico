@@ -173,7 +173,8 @@ def primerDataSet():
    
     
 
-
+"""Utilizada para la medicion de los datos de la grafica. Los datos que muestra han sido 
+copieados en los ficheros .dat"""
 def medirParametroRegularizacion():
     datos_X, datos_y = loadCSV(fichero_train)
     test_X, test_y = loadCSV(fichero_test)
@@ -203,40 +204,15 @@ def medirParametroRegularizacion():
         print(i, "," , (1-acierto_validacion)*100, ",", time() - start_time)
         i += 2
         
-        
+
+"""La he usado para cargar los datos de los csv y mostrar la grafica"""  
 def imprimirEstadisticas():
       l1 = np.genfromtxt("datos/rlregularizacionl1.dat", delimiter= ",")
       l2 = np.genfromtxt("datos/rlregularizacionl2.dat", delimiter= ",")
       
       # evenly sampled time at 200ms intervals
       
-      """
-    p = np.polyfit(l1[:,0],l1[:,1], 1)
-    p2 = np.polyfit(l2[:,0],l2[:,1], 1)
-    
-    # Valores de y calculados del ajuste
-    y_ajuste = p[0]*l1[:,0] + p[1]
-    y_ajuste2 =p2[0]*l2[:,0] + p2[1]
-    # Dibujamos los datos experimentales
-    p_datos, = plt.plot(l1[:,0], l1[:,1], 'r.')
-    # Dibujamos la recta de ajuste
 
-    #plt.plot(l1[:,0], y_ajuste, 'g-')
-    plt.plot(l1[:,0], y_ajuste2, 'b-')
-    plt.title('Mejora con metrica l1')
-    
-    plt.xlabel('Parametro C')
-    plt.ylabel('Tasa Acierto')
-    plt.axis([2,500,0.9750,0.9825])
-    blue_patch = mpatches.Patch(color='red', label='Medidas tomadas')
-    green_patch = mpatches.Patch(color='blue', label='Funcion ajustada')
-    
-    #añadimos al legend los distintos tipos
-    plt.legend(handles=[blue_patch,green_patch])
-    
-    plt.show()
-    #Calculo de mejoras con regularizacion l1 y l2.
-    #obtenerDatosRegularizacion(train_X,train_y,test_X,test_y, regularizacion)"""
       plt.figure()
 
       #plt.plot(l1[:,0], l1[:,1], 'r-') 
