@@ -49,7 +49,7 @@ def plot_confusion_matrix(df_confusion, title='Matriz de confusion', cmap=plt.cm
     plt.ylabel("Etiquetas")
     plt.xlabel("Prediccion")
     
-def regresionLinealEntrenarDefecto(X,y,X_test, y_test):
+def regresionLogisticaEntrenarDefecto(X,y,X_test, y_test):
     
     model = LogisticRegression( )
     #model = LogisticRegression(penalty = None,solver = 'newton-cg')
@@ -61,13 +61,13 @@ def regresionLinealEntrenarDefecto(X,y,X_test, y_test):
     
     return tasa_acierto_test, tasa_acierto_train, model.predict(X_test)
 
-def regresionLinealEntrenarMejorado(X,y,X_test, y_test,regurlarizacion = 'l2' , ajuste = 1):
+def regresionLogisticaEntrenarMejorado(X,y,X_test, y_test,regurlarizacion = 'l2' , ajuste = 1):
     
     model = LogisticRegression(solver = 'liblinear', multi_class='ovr', penalty = regurlarizacion, C = ajuste, random_state=0 )
     #model = LogisticRegression(penalty = None,solver = 'newton-cg')
     
     model.fit(X,y)
-    
+    print(model.n_iter_)
     tasa_acierto = model.score(X_test,y_test)
     tasa_acierto_train = model.score(X,y)
     return tasa_acierto, tasa_acierto_train, model.predict(X_test)
@@ -148,34 +148,17 @@ def primerDataSet():
     validacion_y = datos_y[5621:, ]
     regularizacion = 'l2'
     
-
-
-    start_time = time()
-    acieto_test, acierto_train, y_predecido  = regresionLinealEntrenarDefecto(train_X,train_y,test_X,test_y)
-    print("Regresion logistica por defecto")
-    print("Tiempo=", time() - start_time )
-    print("Ein = ",(1-acierto_train)*100)
-    print("Eout = ",(1-acieto_test)*100)
-    print()
-    
-   
     
     start_time = time()
-    acieto_test, acierto_train,y_predecido_mejorada = regresionLinealEntrenarMejorado(train_X,train_y,test_X,test_y,regularizacion,100)
-    print("Regresion logistica mejorada")
+    acieto_test, acierto_train,y_predecido_mejorada = regresionLogisticaEntrenarMejorado(train_X,train_y,test_X,test_y,regularizacion,100)
+    print("Regresion logistica")
     print("Tiempo=", time() - start_time )
     print("Ein = ",(1-acierto_train)*100)
     print("Eout = ",(1-acieto_test)*100)
     print()
     
     
-    matriz_confusion = confusion_matrix(test_y, y_predecido)
-    matriz_confusion =  matriz_confusion /  matriz_confusion.sum(axis=1) 
-    
-    #plot_confusion_matrix(matriz_confusion)
-    plot_confusion_matrix2(test_y, y_predecido, classes=[0,1,2,3,4,5,6,7,8,9], normalize=True,
-                      title='Matriz de confusion regresion logistica por defecto')
-    
+
     matriz_confusion = confusion_matrix(test_y, y_predecido_mejorada)
     matriz_confusion =  matriz_confusion /  matriz_confusion.sum(axis=1) 
     
@@ -212,7 +195,7 @@ def medirParametroRegularizacion():
     while i <= 100:
         
         start_time = time()
-        acierto_validacion, acierto_train,y_predecido_mejorada = regresionLinealEntrenarMejorado(train_X,train_y,validacion_X,validacion_y,regularizacion,i)
+        acierto_validacion, acierto_train,y_predecido_mejorada = regresionLogisticaEntrenarMejorado(train_X,train_y,validacion_X,validacion_y,regularizacion,i)
        
     
         print(i, "," , (1-acierto_validacion)*100, ",", time() - start_time)
@@ -266,7 +249,7 @@ def imprimirEstadisticas():
       
       
       plt.gca().legend(('l1','l2'))
-      plt.ylabel("Error en validación(%)")
+      plt.ylabel("Error en validación(0%-100%)")
       plt.xlabel("Parametro de regularacion")
       plt.title("Error en validacion")
       

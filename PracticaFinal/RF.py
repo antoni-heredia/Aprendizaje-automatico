@@ -275,7 +275,7 @@ def main():
     print("Pen-Based Recognition of Handwritten Digits Data Set con RF")
     primerDataSet()
     print("--------------------------------------------------")
-    #imprimirEstadisticas()
+    imprimirEstadisticas()
     #calcularParticion()
     #calcularMejorProfundidad()
     #imprimirProfundidad()

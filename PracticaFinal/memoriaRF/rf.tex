@@ -29,7 +29,7 @@
 	
 
 	\section{Random forest(RF)}	
-	Se usa esta técnica puesto que es un muy buen clasificador. En este caso al meter información extra a el dataset tendremos una cantidad grande de variables y esta técnica trabaja muy bien cuando se tienen gran numero de variables.
+	Se usa esta técnica puesto que es un muy buen clasificador. En este caso al meter información extra a el dataset tendremos una cantidad grande de variables y esta técnica trabaja muy bien cuando se tienen gran numero de variables. En este caso se ha añadido información de grado 2.
 	\subsection{Especificación de parámetros RF} 
 	En este caso nos hemos centrado en la elección de una buena cantidad de arboles y la cantidad de variables que utilizara cada árbol para predecir. Para seleccionar estos parámetros se han realizado varias pruebas con la partición de validación. Se ha medido el error con la partición de validación con tres cantidades distintas de variables. El numero de variables elegidas para cada una son las siguientes:
 	\begin{enumerate}
@@ -53,20 +53,20 @@
 		\centering
 		\includegraphics[width=0.7\linewidth]{../imagenesRF/tiempoEjecucion}
 		\caption{}
-		\label{fig:tiempoejecucion}
+		\label{fig:Tiempo de ejecucion}
 	\end{figure}
 
 	En este caso se ve que con mas cantidad de arboles tendremos una mayor tiempo de ejecución. Por tanto he decido definir la cantidad de arboles a 100 y quedarme con la opción de la raíz para el numero de características por árbol.
 	
 	
 	\subsection{Valoracion de resultados.}
-	La métrica utilizada en este caso es mean accuracy y el error obtenido en la partición de test es el 3.5162 \%. En este caso no es un mal porcentaje de error pero vamos a analizar la matriz de confusión para tener una mejor idea.
+	La métrica utilizada en este caso es mean accuracy y el error obtenido en la partición de test es el 3.5162 \% en un tiempo de ejecucion de 2.5 segundos. En este caso no es un mal porcentaje de error pero vamos a analizar la matriz de confusión para tener una mejor idea.
 	
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.7\linewidth]{../imagenesRF/matrizConfusion}
 		\caption{}
-		\label{fig:Matriz de confusión RF}
+		\label{fig:Matriz de confusion RF}
 	\end{figure}
 	
 	En este caso se ve que tenemos falla mucho al prediciendo 7 como 1 y también confunde los 1 con 2. Esto nos podría llegar a fallar mas de lo común en el reconocimiento de estos dígitos.
