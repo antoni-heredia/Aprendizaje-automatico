@@ -115,6 +115,7 @@ def primerDataSet():
     datos_X, datos_y = loadCSV(fichero_train)
     test_X, test_y = loadCSV(fichero_test)
     
+    
     #datos = normalizarDatos(datos)   
     
     
@@ -130,7 +131,7 @@ def primerDataSet():
     validacion_y = datos_y[5621:, ]
 
     start_time = time()
-    clf = RandomForestClassifier(n_estimators=200, random_state=0)
+    clf = RandomForestClassifier(n_estimators=100, random_state=0, oob_score = True)
     clf.fit(train_X, train_y)  
 
 
@@ -138,7 +139,7 @@ def primerDataSet():
     print("Tiempo =", time() - start_time )
     print("E_in = ", 100 - (100 * clf.score(train_X, train_y)))
     print("E_out = ", 100 - ( 100 * clf.score(test_X, test_y)))
-    
+
    
     y_predecido = clf.predict(test_X);
     matriz_confusion = confusion_matrix(test_y, y_predecido)
@@ -171,14 +172,43 @@ def calcularParticion():
     while (i <= 100):
         
         start_time = time()
-        clf = RandomForestClassifier(n_estimators=i, random_state=0)
+        clf = RandomForestClassifier(n_estimators=i, random_state=0,max_depth = 2)
         clf.fit(train_X, train_y)  
         print( i,",", 100 - (100 * clf.score(validacion_X, validacion_y)), ",", time() - start_time )
         i += 2
 
     #print(clf.feature_importances_)
 
-
+def calcularMejorProfundidad():
+    datos_X, datos_y = loadCSV(fichero_train)
+    test_X, test_y = loadCSV(fichero_test)
+    
+    #datos = normalizarDatos(datos)   
+    
+    
+    #test_X = normalizarDatos(test_X)
+    
+    #train_X,test_X = eliminarVarianza(train_X,test_X, 0);
+    
+    datos_X,test_X = anadirInformacionPolinomial(datos_X,test_X,2)
+    train_X = datos_X[:5621, ]
+    train_y = datos_y[:5621, ]
+    
+    validacion_X = datos_X[5621:, ]
+    validacion_y = datos_y[5621:, ]
+    
+    
+    i = 1;
+    #num_variables = np.sqrt(i)
+    while (i <= 15):
+        
+        
+        clf = RandomForestClassifier(n_estimators=100, random_state=0,max_depth = i)
+        clf.fit(train_X, train_y)  
+        print( i,",", 100 - (100 * clf.score(validacion_X, validacion_y)), ",", 100 - (100 * clf.score(train_X, train_y)) )
+        i += 1
+        
+        
 def imprimirEstadisticas():
       raiz = np.genfromtxt("datos/rfraiz.dat", delimiter= ",")
       mitad = np.genfromtxt("datos/rfmitad.dat", delimiter= ",")
@@ -191,7 +221,7 @@ def imprimirEstadisticas():
       plt.plot(mitad[:,0], mitad[:,1], 'b-')
       plt.plot(igual[:,0], igual[:,1], 'g-')
       plt.gca().legend(('m=sqrt(p)','m=p/2', 'm=p'))
-      plt.ylabel("Error en validación")
+      plt.ylabel("Error en validación(0%-100%)")
       plt.xlabel("Nuero de árboles")
       plt.title("Error en muestra para parametro m")
       
@@ -208,19 +238,37 @@ def imprimirEstadisticas():
       plt.title("Tiempos de ejecución para parametro m")
       
       plt.show()
+      
+def imprimirProfundidad():
+      profundidad = np.genfromtxt("datos/rfprofundidad.dat", delimiter= ",")
+
+      
+      # evenly sampled time at 200ms intervals
+      plt.figure()
+
+      plt.plot(profundidad[:,0], profundidad[:,1], 'r-') 
+      
  
-   
+      plt.gca().legend('Error en validacion')
+      plt.ylabel("Error en validación(0%-100%)")
+      plt.xlabel("Profundidad")
+      plt.title("Error con optimizacion en validacion")
+      
+      plt.show()    
+      
+      plt.figure()
+
+      
+      plt.plot(profundidad[:,0], profundidad[:,2], 'b-') 
+ 
+      plt.gca().legend('Error en train')
+      plt.ylabel("Error en validación(0%-100%)")
+      plt.xlabel("Profundidad")
+      plt.title("Error con optimizacion en train")
+      
+      plt.show()    
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
 
 def main():
     print("--------------------------------------------------")
@@ -229,7 +277,8 @@ def main():
     print("--------------------------------------------------")
     #imprimirEstadisticas()
     #calcularParticion()
-    
+    #calcularMejorProfundidad()
+    #imprimirProfundidad()
 
     
     
